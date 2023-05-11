@@ -3,6 +3,9 @@ import React from 'react'
 import { NativeBaseProvider, Text, Box, Button, View } from 'native-base'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { Home } from './screens/Home'
+import { Login } from './screens/Login'
+import { Register } from './screens/Register'
 
 const Stack = createNativeStackNavigator()
 
@@ -24,16 +27,23 @@ export default function App() {
 const HomeScreen = ({ navigation }) => {
   return (
     <View>
-      <Text>Hello This is home page</Text>
-      <Button title='Home' />
+      <Home />
     </View>
   )
 }
 
 const LoginScreen = ({ navigation }) => {
-  return <Button title='Login' />
+  return (
+    <View>
+      <Login />
+    </View>
+  )
 }
 
 const RegisterScreen = ({ navigation }) => {
-  return <Button title='Register Page' />
+  return (
+    <View>
+      <Register />
+    </View>
+  )
 }
