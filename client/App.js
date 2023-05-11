@@ -29,7 +29,7 @@ export default function App() {
 const HomeScreen = ({ navigation }) => {
   return (
     <View>
-      <Home />
+      <Home navigation={navigation} />
     </View>
   )
 }
