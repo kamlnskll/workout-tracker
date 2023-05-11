@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Home } from './screens/Home'
 import { Login } from './screens/Login'
 import { Register } from './screens/Register'
+import { Workout } from './screens/Workout'
 
 const Stack = createNativeStackNavigator()
 
@@ -18,6 +19,7 @@ export default function App() {
           <Stack.Screen name='Home' component={HomeScreen} />
           <Stack.Screen name='Login' component={LoginScreen} />
           <Stack.Screen name='Register' component={RegisterScreen} />
+          <Stack.Screen name='Workout' component={WorkoutScreen} />
         </Stack.Navigator>
       </NativeBaseProvider>
     </NavigationContainer>
@@ -44,6 +46,14 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <View>
       <Register />
+    </View>
+  )
+}
+
+const WorkoutScreen = ({ navigation }) => {
+  return (
+    <View>
+      <Workout />
     </View>
   )
 }

@@ -1,11 +1,15 @@
 import React from 'react'
 import { Text, Button, View } from 'native-base'
+import { StyleSheet } from 'react-native'
 
 export const Home = () => {
   return (
     <View>
-      <Text>Hello This is home page from the screens folder</Text>
-      <Button title='Home' />
+      <View>
+        <Text>Workouts</Text>
+        <Button>+</Button>
+      </View>
+      <View></View>
     </View>
   )
 }
