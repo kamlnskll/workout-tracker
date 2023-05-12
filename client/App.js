@@ -37,7 +37,7 @@ const HomeScreen = ({ navigation }) => {
 const LoginScreen = ({ navigation }) => {
   return (
     <View>
-      <Login />
+      <Login navigation={navigation} />
     </View>
   )
 }
@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
 const RegisterScreen = ({ navigation }) => {
   return (
     <View>
-      <Register />
+      <Register navigation={navigation} />
     </View>
   )
 }
