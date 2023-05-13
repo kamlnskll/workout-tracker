@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   Text,
@@ -23,6 +23,15 @@ export const Login = ({ navigation }) => {
     password: '',
     error: '',
   })
+
+  useEffect(() => {
+    setTimeout(() => {
+      setField({
+        ...field,
+        error: '',
+      })
+    }, 5000)
+  }, [field.error])
 
   const handleLogin = async () => {
     if (field.email === '' || field.password === '') {
@@ -74,14 +83,20 @@ export const Login = ({ navigation }) => {
         </Heading>
 
         <VStack space={3} mt='4'>
+          <Text color='red.600'>{field.error}</Text>
           <FormControl>
-            <FormControl.Label>Username</FormControl.Label>
-            <Input />
+            <FormControl.Label>Email</FormControl.Label>
+            <Input
+              onChangeText={(text) => setField({ ...field, email: text })}
+            />
           </FormControl>
 
           <FormControl>
             <FormControl.Label>Password</FormControl.Label>
-            <Input type='password' />
+            <Input
+              type='password'
+              onChangeText={(text) => setField({ ...field, password: text })}
+            />
           </FormControl>
           <Button mt='8' color='blue.600' onPress={handleLogin}>
             Login
