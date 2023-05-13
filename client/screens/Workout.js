@@ -1,10 +1,18 @@
 import React from 'react'
-import { Text, View } from 'native-base'
+import { Input, Text, View } from 'native-base'
 
 export const Workout = ({ workoutData }) => {
   return (
     <View>
-      <Text>Hello This is workout page from the screens folder</Text>
+      <View>
+        <Text>Build your workout.</Text>
+      </View>
+      <View>
+        <View>
+          <Text>Exercise #1</Text>
+          <Input />
+        </View>
+      </View>
     </View>
   )
 }
