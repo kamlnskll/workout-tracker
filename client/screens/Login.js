@@ -13,10 +13,9 @@ import {
   Input,
   Link,
 } from 'native-base'
+import { auth } from '../firebase/firebase'
 
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-
-const auth = getAuth()
+import { signInWithEmailAndPassword } from 'firebase/auth'
 
 export const Login = ({ navigation }) => {
   const [field, setField] = useState({
