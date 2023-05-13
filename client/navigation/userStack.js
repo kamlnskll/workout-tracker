@@ -1,18 +1,22 @@
 import React from 'react'
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { View } from 'native-base'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { Button, View } from 'native-base'
 import { Home } from '../screens/Home'
 import { Workout } from '../screens/Workout'
+import Profile from '../screens/Profile'
 
-const Stack = createNativeStackNavigator()
+const Tab = createBottomTabNavigator()
 
 const UserStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name='Home' component={HomeScreen} />
-      <Stack.Screen name='Workout' component={WorkoutScreen} />
-    </Stack.Navigator>
+    <Tab.Navigator>
+      <Tab.Screen name='Home' component={HomeScreen} />
+      <Tab.Screen name='New Workout' component={WorkoutScreen} />
+      <Tab.Screen name='Profile' component={ProfileScreen} />
+
+      {/* <Tab.Screen name='Sign Out' /> */}
+    </Tab.Navigator>
   )
 }
 
@@ -28,6 +32,14 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View>
       <Home navigation={navigation} />
+    </View>
+  )
+}
+
+const ProfileScreen = ({ navigation }) => {
+  return (
+    <View>
+      <Profile navigation={navigation} />
     </View>
   )
 }

@@ -10,7 +10,6 @@ export const Home = ({ navigation }) => {
     <View>
       <View>
         <Text>Workouts</Text>
-        <Button onPress={() => navigation.navigate('Register')}>+</Button>
       </View>
       <View>
         {workouts.map((workout) => (
