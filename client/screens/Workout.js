@@ -20,6 +20,10 @@ export const Workout = ({ workoutData }) => {
     setExercises(updatedExercises)
   }
 
+  const saveWorkout = () => {
+    // save workout to db in firebase here
+  }
+
   const date = dayjs().format('MMMM DD')
 
   return (
