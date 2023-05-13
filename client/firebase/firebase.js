@@ -1,4 +1,5 @@
 import { getApp, getApps, initializeApp } from 'firebase/app'
+import { getDatabase } from 'firebase/database'
 // import { getAnalytics } from 'firebase/analytics'
 import { getAuth } from 'firebase/auth'
 
@@ -18,3 +19,4 @@ export const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 
 // export const analytics = getAnalytics(app)
 export const auth = getAuth(app)
+export const database = getDatabase(app)

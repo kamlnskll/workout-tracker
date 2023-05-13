@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Button, Input, Text, View } from 'native-base'
 import dayjs from 'dayjs'
+import { database } from '../firebase/firebase'
+import { ref, set } from 'firebase/database'
 
 // Need to change it so that I can add reps to individual sets
 // Maybe do an add set button that adds the current reps x set
@@ -20,8 +22,12 @@ export const Workout = ({ workoutData }) => {
     setExercises(updatedExercises)
   }
 
-  const saveWorkout = () => {
+  const saveWorkoutInDB = () => {
     // save workout to db in firebase here
+
+    set(ref(database, ''), {
+      exercises: exercises,
+    })
   }
 
   const date = dayjs().format('MMMM DD')
@@ -58,7 +64,7 @@ export const Workout = ({ workoutData }) => {
           <Text>Add exercise</Text>
         </Button>
         <Button>
-          <Text>Save</Text>
+          <Text onPress={saveWorkoutInDB}>Save</Text>
         </Button>
       </View>
     </View>
