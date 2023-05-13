@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/firebase-auth'
 import {
   Text,
   Button,
@@ -12,7 +13,6 @@ import {
   Input,
   Link,
 } from 'native-base'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/firebase-auth'
 
 const auth = getAuth()
 
