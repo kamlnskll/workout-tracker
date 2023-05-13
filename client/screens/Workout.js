@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Input, Text, View } from 'native-base'
+import dayjs from 'dayjs'
 
 // Need to change it so that I can add reps to individual sets
 // Maybe do an add set button that adds the current reps x set
@@ -19,10 +20,14 @@ export const Workout = ({ workoutData }) => {
     setExercises(updatedExercises)
   }
 
+  const date = dayjs().format('MMMM DD')
+
   return (
     <View>
       <View>
-        <Text>Build your workout.</Text>
+        <Text my='4' ml='8' fontSize='xl' font='bold'>
+          {date}
+        </Text>
       </View>
       <View>
         {exercises.map((exercise, index) => (
@@ -47,6 +52,9 @@ export const Workout = ({ workoutData }) => {
         ))}
         <Button onPress={addExercise}>
           <Text>Add exercise</Text>
+        </Button>
+        <Button>
+          <Text>Save</Text>
         </Button>
       </View>
     </View>
