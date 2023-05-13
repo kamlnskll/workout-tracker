@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Text,
   Button,
@@ -12,8 +12,36 @@ import {
   Input,
   Link,
 } from 'native-base'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/firebase-auth'
+
+const auth = getAuth()
 
 export const Login = ({ navigation }) => {
+  const [field, setField] = useState({
+    email: '',
+    password: '',
+    error: '',
+  })
+
+  const handleLogin = async () => {
+    if (field.email === '' || field.password === '') {
+      setField({
+        ...field,
+        error: 'Enter both email and password.',
+      })
+      return
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, field.email, field.password)
+    } catch (error) {
+      setField({
+        ...field,
+        error: error.message,
+      })
+    }
+  }
+
   return (
     <Center w='100%'>
       <Box safeArea p='2' w='90%' maxW='290' py='8'>
