@@ -14,7 +14,7 @@ import {
   Link,
 } from 'native-base'
 
-import { getAuth, signInWithEmailAndPassword } from 'firebase/firebase-auth'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 const auth = getAuth()
 
