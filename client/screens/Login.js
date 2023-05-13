@@ -34,7 +34,12 @@ export const Login = ({ navigation }) => {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, field.email, field.password)
+      await signInWithEmailAndPassword(auth, field.email, field.password).then(
+        (userCredentials) => {
+          const user = userCredentials.user
+          console.log('User logged in successfully', console.log(user))
+        }
+      )
     } catch (error) {
       setField({
         ...field,
@@ -78,7 +83,7 @@ export const Login = ({ navigation }) => {
             <FormControl.Label>Password</FormControl.Label>
             <Input type='password' />
           </FormControl>
-          <Button mt='8' color='blue.600'>
+          <Button mt='8' color='blue.600' onPress={handleLogin}>
             Login
           </Button>
         </VStack>
