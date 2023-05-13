@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Text,
   Button,
@@ -13,20 +13,31 @@ import {
   Link,
 } from 'native-base'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../firebase/firebase'
 
 export const Register = ({ navigation }) => {
   const [field, setField] = useState({
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
     error: '',
   })
 
-  const handleRegister = async () => {
-    if (field.email === '' || field.password === '' || field.username === '') {
+  useEffect(() => {
+    setTimeout(() => {
       setField({
         ...field,
-        error: 'Enter both email and password.',
+        error: '',
+      })
+    }, 5000)
+  }, [field.error])
+
+  const handleRegister = async () => {
+    if (field.email == '' || field.password == '' || field.username == '') {
+      setField({
+        ...field,
+        error: 'All fields must be filled to register.',
       })
       return
     }
@@ -74,21 +85,34 @@ export const Register = ({ navigation }) => {
         </Heading>
 
         <VStack space={3} mt='4'>
+          <Text color='red.600'>{field.error}</Text>
           <FormControl>
             <FormControl.Label>Username</FormControl.Label>
-            <Input />
+            <Input
+              onChangeText={(text) => setField({ ...field, username: text })}
+            />
           </FormControl>
           <FormControl>
             <FormControl.Label>Email</FormControl.Label>
-            <Input />
+            <Input
+              onChangeText={(text) => setField({ ...field, email: text })}
+            />
           </FormControl>
           <FormControl>
             <FormControl.Label>Password</FormControl.Label>
-            <Input type='password' />
+            <Input
+              type='password'
+              onChangeText={(text) => setField({ ...field, password: text })}
+            />
           </FormControl>
           <FormControl>
             <FormControl.Label>Confirm Password</FormControl.Label>
-            <Input type='password' />
+            <Input
+              type='password'
+              onChangeText={(text) =>
+                setField({ ...field, confirmPassword: text })
+              }
+            />
           </FormControl>
           <Button mt='8' color='blue.600' onPress={handleRegister}>
             Sign up

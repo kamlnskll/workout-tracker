@@ -1,5 +1,5 @@
 import { getApp, getApps, initializeApp } from 'firebase/app'
-import { getAnalytics } from 'firebase/analytics'
+// import { getAnalytics } from 'firebase/analytics'
 import { getAuth } from 'firebase/auth'
 
 // Initialize Firebase
@@ -16,5 +16,5 @@ const firebaseConfig = {
 
 export const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 
-export const analytics = getAnalytics(app)
+// export const analytics = getAnalytics(app)
 export const auth = getAuth(app)
