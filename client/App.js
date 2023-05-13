@@ -7,6 +7,7 @@ import { Home } from './screens/Home'
 import { Login } from './screens/Login'
 import { Register } from './screens/Register'
 import { Workout } from './screens/Workout'
+import RootNavigation from './navigation/auth'
 
 const Stack = createNativeStackNavigator()
 
@@ -15,45 +16,15 @@ export default function App() {
   return (
     <NavigationContainer>
       <NativeBaseProvider>
-        <Stack.Navigator>
-          <Stack.Screen name='Home' component={HomeScreen} />
-          <Stack.Screen name='Login' component={LoginScreen} />
-          <Stack.Screen name='Register' component={RegisterScreen} />
-          <Stack.Screen name='Workout' component={WorkoutScreen} />
-        </Stack.Navigator>
+        <RootNavigation />
       </NativeBaseProvider>
     </NavigationContainer>
   )
 }
 
-const HomeScreen = ({ navigation }) => {
-  return (
-    <View>
-      <Home navigation={navigation} />
-    </View>
-  )
-}
-
-const LoginScreen = ({ navigation }) => {
-  return (
-    <View>
-      <Login navigation={navigation} />
-    </View>
-  )
-}
-
-const RegisterScreen = ({ navigation }) => {
-  return (
-    <View>
-      <Register navigation={navigation} />
-    </View>
-  )
-}
-
-const WorkoutScreen = ({ navigation }) => {
-  return (
-    <View>
-      <Workout />
-    </View>
-  )
+{
+  /* <Stack.Navigator>
+          
+        </Stack.Navigator>
+      </NativeBaseProvider> */
 }
