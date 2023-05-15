@@ -4,7 +4,9 @@ import React from 'react'
 const Profile = ({ navigation }) => {
   return (
     <View>
-      <Text>Workouts</Text>
+      <View>
+        <Text>Workouts</Text>
+      </View>
     </View>
   )
 }
