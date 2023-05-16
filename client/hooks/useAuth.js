@@ -9,6 +9,7 @@ export const useAuth = () => {
       //
       // Sign in, else sign out
       if (user) {
+        const uid = user.uid
         setUser(user)
       } else {
         setUser(undefined)

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Input, Text, View, HStack, Flex, Pressable } from 'native-base'
 import dayjs from 'dayjs'
 import { collection, addDoc } from 'firebase/firestore'
-import { database } from '../firebase/firebase'
+import { database, auth } from '../firebase/firebase'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import uuid from 'react-native-uuid'
 import { serverTimestamp } from 'firebase/firestore'
@@ -18,7 +18,8 @@ export const Workout = ({ workoutData }) => {
   ])
 
   const [error, setError] = useState('')
-
+  const currentUserId = auth.currentUser.uid
+  // const currentUserID = currentUser.uid
   const date = dayjs().format('MMMM DD')
 
   useEffect(() => {
@@ -60,8 +61,8 @@ export const Workout = ({ workoutData }) => {
     const dbPayload = {
       timestamp,
       exercises,
+      uploaderID: currentUserId,
     }
-
     // save workout to Firestore
     await addDoc(collection(database, 'workouts'), dbPayload)
       .then((res) => console.log('New document created', res))
@@ -166,6 +167,9 @@ export const Workout = ({ workoutData }) => {
       <Flex position='absolute' bottom='12' right='8'>
         <Button w='16' onPress={saveWorkoutInDB}>
           <Text color='white'>Save</Text>
+        </Button>
+        <Button w='16'>
+          <Text color='red.500'>Save</Text>
         </Button>
       </Flex>
     </View>
