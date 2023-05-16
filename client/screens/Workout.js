@@ -5,6 +5,7 @@ import { collection, addDoc } from 'firebase/firestore'
 import { database } from '../firebase/firebase'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import uuid from 'react-native-uuid'
+import { serverTimestamp } from 'firebase/firestore'
 
 // Need to change it so that I can add reps to individual sets
 // Maybe do an add set button that adds the current reps x set
@@ -55,14 +56,14 @@ export const Workout = ({ workoutData }) => {
 
   const saveWorkoutInDB = async () => {
     // attach timestamp
-    const timestamp = dayjs()
+    const timestamp = serverTimestamp()
     const dbPayload = {
       timestamp,
       exercises,
     }
 
     // save workout to Firestore
-    await addDoc(collection(database, 'workouts'), { dbPayload })
+    await addDoc(collection(database, 'workouts'), dbPayload)
       .then((res) => console.log('New document created', res))
       .catch((err) => setError(err))
   }
