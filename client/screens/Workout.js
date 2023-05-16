@@ -18,6 +18,8 @@ export const Workout = ({ workoutData }) => {
 
   const [error, setError] = useState('')
 
+  const date = dayjs().format('MMMM DD')
+
   useEffect(() => {
     setTimeout(() => {
       setError('')
@@ -51,6 +53,20 @@ export const Workout = ({ workoutData }) => {
     setExercises(newData)
   }
 
+  const saveWorkoutInDB = async () => {
+    // attach timestamp
+    const timestamp = dayjs()
+    const dbPayload = {
+      timestamp,
+      exercises,
+    }
+
+    // save workout to Firestore
+    await addDoc(collection(database, 'workouts'), { dbPayload })
+      .then((res) => console.log('New document created', res))
+      .catch((err) => setError(err))
+  }
+
   const renderHiddenItem = (data, rowMap) => (
     <HStack flex={1} py='0' my='2'>
       <Pressable
@@ -81,17 +97,6 @@ export const Workout = ({ workoutData }) => {
       </Pressable>
     </HStack>
   )
-
-  const saveWorkoutInDB = async () => {
-    // attach unique key property to each document
-
-    // save workout to Firestore
-    await addDoc(collection(database, 'workouts'), { exercises })
-      .then((res) => console.log('New document created', res))
-      .catch((err) => setError(err))
-  }
-
-  const date = dayjs().format('MMMM DD')
 
   return (
     <View position='relative' minHeight={'100%'}>
