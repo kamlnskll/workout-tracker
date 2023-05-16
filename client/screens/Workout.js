@@ -47,9 +47,6 @@ export const Workout = ({ workoutData }) => {
       return exercise
     })
     setExercises(updatedExercises)
-    // const updatedExercises = [...exercises]
-    // updatedExercises[index][field] = value
-    // setExercises(updatedExercises)
   }
 
   const closeRow = (rowMap, rowKey) => {
