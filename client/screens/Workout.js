@@ -14,7 +14,7 @@ import { serverTimestamp } from 'firebase/firestore'
 
 export const Workout = ({ workoutData }) => {
   const [exercises, setExercises] = useState([
-    { key: uuid.v4(), name: '', reps: '', sets: '' },
+    { key: uuid.v4(), name: '', reps: '', sets: '', index: 0 },
   ])
 
   const [error, setError] = useState('')
@@ -29,16 +29,27 @@ export const Workout = ({ workoutData }) => {
   }, [error])
 
   const addExercise = () => {
+    const newIndex = exercises.length
     setExercises([
       ...exercises,
-      { key: uuid.v4(), name: '', reps: '', sets: '' },
+      { key: uuid.v4(), name: '', reps: '', sets: '', index: newIndex },
     ])
   }
 
-  const updateExercise = (index, field, value) => {
-    const updatedExercises = [...exercises]
-    updatedExercises[index][field] = value
+  const updateExercise = (exerciseIndex, field, value) => {
+    const updatedExercises = exercises.map((exercise) => {
+      if (exercise.index === exerciseIndex) {
+        return {
+          ...exercise,
+          [field]: value,
+        }
+      }
+      return exercise
+    })
     setExercises(updatedExercises)
+    // const updatedExercises = [...exercises]
+    // updatedExercises[index][field] = value
+    // setExercises(updatedExercises)
   }
 
   const closeRow = (rowMap, rowKey) => {
@@ -126,18 +137,18 @@ export const Workout = ({ workoutData }) => {
                   <Input
                     placeholder='Exercise name'
                     value={exercise.name}
-                    // onChangeText={(value) =>
-                    //   updateExercise(index, 'name', value)
-                    // }
+                    onChangeText={(value) =>
+                      updateExercise(exercise.index, 'name', value)
+                    }
                     h='35'
                     w='180'
                   />
                   <Input
                     placeholder='Sets'
                     value={exercise.sets}
-                    // onChangeText={(value) =>
-                    //   updateExercise(index, 'sets', value)
-                    // }
+                    onChangeText={(value) =>
+                      updateExercise(exercise.index, 'sets', value)
+                    }
                     h='35'
                     w='20'
                     // mr='4'
@@ -145,9 +156,9 @@ export const Workout = ({ workoutData }) => {
                   <Input
                     placeholder='Reps'
                     value={exercise.reps}
-                    // onChangeText={(value) =>
-                    //   updateExercise(index, 'reps', value)
-                    // }
+                    onChangeText={(value) =>
+                      updateExercise(exercise.index, 'reps', value)
+                    }
                     h='35'
                     w='20'
                     // mr='4'
