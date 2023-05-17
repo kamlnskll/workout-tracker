@@ -13,7 +13,7 @@ import { SpinningLoader } from '../components/SpinningLoader'
 // Can add multiple sets with the same rep range or individual
 // with custom
 
-export const Workout = ({ workoutData }) => {
+export const Workout = ({ workoutData, navigation }) => {
   const [exercises, setExercises] = useState([
     { key: uuid.v4(), name: '', reps: '', sets: '', index: 0 },
   ])
@@ -80,6 +80,7 @@ export const Workout = ({ workoutData }) => {
       .then((res) => {
         setLoading(false)
         console.log('New workout created in Firestore')
+        navigation.navigate('Home')
       })
       .catch((err) => setError(err))
   }
