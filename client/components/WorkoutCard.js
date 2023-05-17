@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 // Shows a preview of each workout in a clickable UI form that will navigate them to the workout data.
 
-export const WorkoutCard = ({ workout }) => {
+export const WorkoutCard = ({ workout, navigation }) => {
   const exercises = workout.exercises
   const date = dayjs
     .unix(workout.timestamp.seconds)

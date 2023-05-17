@@ -4,8 +4,12 @@ import { StyleSheet } from 'react-native'
 import { WorkoutCard } from '../components/WorkoutCard'
 import { auth, database } from '../firebase/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
+import { createStackNavigator } from '@react-navigation/stack'
+import SavedWorkout from './SavedWorkout'
 
 export const Home = ({ navigation }) => {
+  const Stack = createStackNavigator()
+
   const [workouts, setWorkouts] = useState()
   const currentUserID = auth.currentUser.uid
 
@@ -33,34 +37,56 @@ export const Home = ({ navigation }) => {
       .catch((err) => console.log(err))
   }, [])
 
-  // Need to set the workout map card within each workout card, and
+  return (
+    <>
+      <Stack.Navigator>
+        <Stack.Screen
+          name='Saved Workout'
+          component={SavedWorkoutScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+
+      <View>
+        <View ml='4' mt='6' mb='3'>
+          <Heading>Workouts</Heading>
+        </View>
+        <View>
+          {Array.isArray(workouts)
+            ? workouts.map((workout) => (
+                <Pressable
+                  my='1'
+                  bg='primary.50'
+                  borderColor={'black'}
+                  borderWidth={'0.5'}
+                  onPress={() =>
+                    navigation.navigate('Saved Workout', {
+                      screen: 'Saved Workout',
+                    })
+                  }
+                  _pressed={{
+                    bg: 'primary.100',
+                  }}
+                  rounded='lg'
+                  w='75%'
+                  ml='4'
+                  mr='auto'
+                  justifyContent='left'
+                >
+                  <WorkoutCard workout={workout} />
+                </Pressable>
+              ))
+            : null}
+        </View>
+      </View>
+    </>
+  )
+}
+
+const SavedWorkoutScreen = ({ navigation }) => {
   return (
     <View>
-      <View ml='4' mt='6' mb='3'>
-        <Heading>Workouts</Heading>
-      </View>
-      <View>
-        {Array.isArray(workouts)
-          ? workouts.map((workout) => (
-              <Pressable
-                my='1'
-                bg='primary.50'
-                borderColor={'black'}
-                borderWidth={'0.5'}
-                _pressed={{
-                  bg: 'primary.100',
-                }}
-                rounded='lg'
-                w='75%'
-                ml='4'
-                mr='auto'
-                justifyContent='left'
-              >
-                <WorkoutCard workout={workout} />
-              </Pressable>
-            ))
-          : null}
-      </View>
+      <SavedWorkout navigation={navigation} />
     </View>
   )
 }
