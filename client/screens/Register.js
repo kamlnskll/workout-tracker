@@ -10,7 +10,6 @@ import {
   HStack,
   FormControl,
   Input,
-  Link,
 } from 'native-base'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase/firebase'

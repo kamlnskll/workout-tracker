@@ -1,4 +1,4 @@
-import { Text, View, Spinner, HStack, Heading, VStack } from 'native-base'
+import { Text, View, Spinner, Heading, VStack } from 'native-base'
 import React from 'react'
 
 export const SpinningLoader = ({ isVisible }) => {
