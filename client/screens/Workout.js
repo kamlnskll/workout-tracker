@@ -2,23 +2,26 @@ import React, { useEffect, useState } from 'react'
 import { Button, Input, Text, View, HStack, Flex, Pressable } from 'native-base'
 import dayjs from 'dayjs'
 import { collection, addDoc } from 'firebase/firestore'
-import { database } from '../firebase/firebase'
+import { database, auth } from '../firebase/firebase'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import uuid from 'react-native-uuid'
 import { serverTimestamp } from 'firebase/firestore'
+import { SpinningLoader } from '../components/SpinningLoader'
 
 // Need to change it so that I can add reps to individual sets
 // Maybe do an add set button that adds the current reps x set
 // Can add multiple sets with the same rep range or individual
 // with custom
 
-export const Workout = ({ workoutData }) => {
+export const Workout = ({ workoutData, navigation }) => {
   const [exercises, setExercises] = useState([
-    { key: uuid.v4(), name: '', reps: '', sets: '' },
+    { key: uuid.v4(), name: '', reps: '', sets: '', index: 0 },
   ])
 
   const [error, setError] = useState('')
-
+  const [loading, setLoading] = useState(false)
+  const currentUserId = auth.currentUser.uid
+  // const currentUserID = currentUser.uid
   const date = dayjs().format('MMMM DD')
 
   useEffect(() => {
@@ -28,15 +31,23 @@ export const Workout = ({ workoutData }) => {
   }, [error])
 
   const addExercise = () => {
+    const newIndex = exercises.length
     setExercises([
       ...exercises,
-      { key: uuid.v4(), name: '', reps: '', sets: '' },
+      { key: uuid.v4(), name: '', reps: '', sets: '', index: newIndex },
     ])
   }
 
-  const updateExercise = (index, field, value) => {
-    const updatedExercises = [...exercises]
-    updatedExercises[index][field] = value
+  const updateExercise = (exerciseIndex, field, value) => {
+    const updatedExercises = exercises.map((exercise) => {
+      if (exercise.index === exerciseIndex) {
+        return {
+          ...exercise,
+          [field]: value,
+        }
+      }
+      return exercise
+    })
     setExercises(updatedExercises)
   }
 
@@ -60,11 +71,17 @@ export const Workout = ({ workoutData }) => {
     const dbPayload = {
       timestamp,
       exercises,
+      uploaderID: currentUserId,
     }
-
     // save workout to Firestore
+
+    setLoading(true)
     await addDoc(collection(database, 'workouts'), dbPayload)
-      .then((res) => console.log('New document created', res))
+      .then((res) => {
+        setLoading(false)
+        console.log('New workout created in Firestore')
+        navigation.navigate('Home')
+      })
       .catch((err) => setError(err))
   }
 
@@ -101,6 +118,7 @@ export const Workout = ({ workoutData }) => {
 
   return (
     <View position='relative' minHeight={'100%'}>
+      <SpinningLoader isVisible={loading} />
       <Flex>
         <View>
           <Text my='4' ml='8' fontSize='xl' fontWeight='bold'>
@@ -125,18 +143,18 @@ export const Workout = ({ workoutData }) => {
                   <Input
                     placeholder='Exercise name'
                     value={exercise.name}
-                    // onChangeText={(value) =>
-                    //   updateExercise(index, 'name', value)
-                    // }
+                    onChangeText={(value) =>
+                      updateExercise(exercise.index, 'name', value)
+                    }
                     h='35'
                     w='180'
                   />
                   <Input
                     placeholder='Sets'
                     value={exercise.sets}
-                    // onChangeText={(value) =>
-                    //   updateExercise(index, 'sets', value)
-                    // }
+                    onChangeText={(value) =>
+                      updateExercise(exercise.index, 'sets', value)
+                    }
                     h='35'
                     w='20'
                     // mr='4'
@@ -144,9 +162,9 @@ export const Workout = ({ workoutData }) => {
                   <Input
                     placeholder='Reps'
                     value={exercise.reps}
-                    // onChangeText={(value) =>
-                    //   updateExercise(index, 'reps', value)
-                    // }
+                    onChangeText={(value) =>
+                      updateExercise(exercise.index, 'reps', value)
+                    }
                     h='35'
                     w='20'
                     // mr='4'

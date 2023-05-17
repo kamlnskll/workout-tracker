@@ -23,7 +23,7 @@ const UserStack = () => {
 const WorkoutScreen = ({ navigation }) => {
   return (
     <View>
-      <Workout />
+      <Workout navigation={navigation} />
     </View>
   )
 }
