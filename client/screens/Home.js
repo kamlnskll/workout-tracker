@@ -3,11 +3,8 @@ import { View, Heading, Pressable } from 'native-base'
 import { WorkoutCard } from '../components/WorkoutCard'
 import { auth, database } from '../firebase/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
-import { createStackNavigator } from '@react-navigation/stack'
 
 export const Home = ({ navigation }) => {
-  const Stack = createStackNavigator()
-
   const [workouts, setWorkouts] = useState()
   const currentUserID = auth.currentUser.uid
 
@@ -39,7 +36,7 @@ export const Home = ({ navigation }) => {
     <>
       <View>
         <View ml='4' mt='6' mb='3'>
-          <Heading>Workouts</Heading>
+          <Heading onPress={() => console.log(workouts)}>Workouts</Heading>
         </View>
         <View>
           {Array.isArray(workouts)
@@ -51,7 +48,7 @@ export const Home = ({ navigation }) => {
                   borderWidth={'0.5'}
                   onPress={() =>
                     navigation.navigate('Saved Workout', {
-                      screen: 'Saved Workout',
+                      id: workout.id,
                     })
                   }
                   _pressed={{

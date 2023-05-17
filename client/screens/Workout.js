@@ -68,10 +68,12 @@ export const Workout = ({ workoutData, navigation }) => {
   const saveWorkoutInDB = async () => {
     // attach timestamp
     const timestamp = serverTimestamp()
+    const id = uuid.v4()
     const dbPayload = {
       timestamp,
       exercises,
       uploaderID: currentUserId,
+      id,
     }
     // save workout to Firestore
 

@@ -27,10 +27,10 @@ const HomeScreen = ({ navigation }) => {
   )
 }
 
-const SavedWorkoutScreen = ({ navigation }) => {
+const SavedWorkoutScreen = ({ route, navigation }) => {
   return (
     <View>
-      <SavedWorkout navigation={navigation} />
+      <SavedWorkout route={route} navigation={navigation} id={''} />
     </View>
   )
 }
