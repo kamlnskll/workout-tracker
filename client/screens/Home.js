@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Text, Button, View, Heading, Pressable } from 'native-base'
-import { StyleSheet } from 'react-native'
+import { View, Heading, Pressable } from 'native-base'
 import { WorkoutCard } from '../components/WorkoutCard'
 import { auth, database } from '../firebase/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 import { createStackNavigator } from '@react-navigation/stack'
-import SavedWorkout from './SavedWorkout'
 
 export const Home = ({ navigation }) => {
   const Stack = createStackNavigator()
@@ -39,14 +37,6 @@ export const Home = ({ navigation }) => {
 
   return (
     <>
-      <Stack.Navigator>
-        <Stack.Screen
-          name='Saved Workout'
-          component={SavedWorkoutScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-
       <View>
         <View ml='4' mt='6' mb='3'>
           <Heading>Workouts</Heading>
@@ -80,13 +70,5 @@ export const Home = ({ navigation }) => {
         </View>
       </View>
     </>
-  )
-}
-
-const SavedWorkoutScreen = ({ navigation }) => {
-  return (
-    <View>
-      <SavedWorkout navigation={navigation} />
-    </View>
   )
 }
