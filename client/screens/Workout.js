@@ -6,6 +6,7 @@ import { database, auth } from '../firebase/firebase'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import uuid from 'react-native-uuid'
 import { serverTimestamp } from 'firebase/firestore'
+import { SpinningLoader } from '../components/SpinningLoader'
 
 // Need to change it so that I can add reps to individual sets
 // Maybe do an add set button that adds the current reps x set
@@ -18,6 +19,7 @@ export const Workout = ({ workoutData }) => {
   ])
 
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const currentUserId = auth.currentUser.uid
   // const currentUserID = currentUser.uid
   const date = dayjs().format('MMMM DD')
@@ -72,8 +74,13 @@ export const Workout = ({ workoutData }) => {
       uploaderID: currentUserId,
     }
     // save workout to Firestore
+
+    setLoading(true)
     await addDoc(collection(database, 'workouts'), dbPayload)
-      .then((res) => console.log('New document created', res))
+      .then((res) => {
+        setLoading(false)
+        console.log('New workout created in Firestore')
+      })
       .catch((err) => setError(err))
   }
 
@@ -110,6 +117,7 @@ export const Workout = ({ workoutData }) => {
 
   return (
     <View position='relative' minHeight={'100%'}>
+      <SpinningLoader isVisible={loading} />
       <Flex>
         <View>
           <Text my='4' ml='8' fontSize='xl' fontWeight='bold'>
@@ -175,9 +183,6 @@ export const Workout = ({ workoutData }) => {
       <Flex position='absolute' bottom='12' right='8'>
         <Button w='16' onPress={saveWorkoutInDB}>
           <Text color='white'>Save</Text>
-        </Button>
-        <Button w='16'>
-          <Text color='red.500'>Save</Text>
         </Button>
       </Flex>
     </View>
