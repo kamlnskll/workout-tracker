@@ -1,4 +1,4 @@
-import { Heading, Text, View } from 'native-base'
+import { HStack, Heading, Text, View } from 'native-base'
 import React, { useEffect, useState } from 'react'
 import { getDocs, collection, query, where } from 'firebase/firestore'
 import { database } from '../firebase/firebase'
@@ -21,7 +21,8 @@ const SavedWorkout = ({ route, navigation }) => {
     } else {
       console.log('Workout not found')
     }
-    return workoutData
+    // Returning workoutData[0] because there should be only one result with that ID anyway.
+    return workoutData[0]
   }
 
   useEffect(() => {
@@ -33,9 +34,28 @@ const SavedWorkout = ({ route, navigation }) => {
 
   return (
     <View>
-      <View bg={'primary.50'}>
-        <Text onPress={() => console.log(workout)}>Saved Workout</Text>
+      <View
+        bg={'primary.50'}
+        mx={'4'}
+        my='1'
+        borderWidth={'0.5'}
+        borderColor='black'
+        rounded='lg'
+      >
         <Heading></Heading>
+        <View pb='4'>
+          {workout?.exercises?.map((exercise) => (
+            <View>
+              <HStack ml='4'>
+                <Text>{exercise.name}</Text>
+                <HStack>
+                  <Text>{exercise.reps} reps</Text>
+                  <Text> x {exercise.sets} sets</Text>
+                </HStack>
+              </HStack>
+            </View>
+          ))}
+        </View>
       </View>
     </View>
   )
