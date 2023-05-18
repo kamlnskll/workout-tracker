@@ -2,6 +2,7 @@ import { HStack, Heading, Text, View } from 'native-base'
 import React, { useEffect, useState } from 'react'
 import { getDocs, collection, query, where } from 'firebase/firestore'
 import { database } from '../firebase/firebase'
+import dayjs from 'dayjs'
 
 const SavedWorkout = ({ route, navigation }) => {
   const [workout, setWorkout] = useState()
@@ -32,25 +33,51 @@ const SavedWorkout = ({ route, navigation }) => {
     })
   }, [])
 
+  const date = dayjs
+    .unix(workout?.timestamp?.seconds)
+    .format('MMMM DD, YYYY')
+    .toString()
+
+  const time = dayjs
+    .unix(workout?.timestamp?.seconds)
+    .format('h:mm a')
+    .toString()
+
   return (
     <View>
       <View
         bg={'primary.50'}
         mx={'4'}
-        my='1'
+        my='12'
         borderWidth={'0.5'}
         borderColor='black'
         rounded='lg'
+        minH={'50%'}
+        maxH={'80%'}
       >
-        <Heading></Heading>
+        <HStack mx='4' my='4' justifyContent={'space-between'}>
+          <Heading fontSize='md'>{date}</Heading>
+          <Text fontSize='xs' my='auto'>
+            Created at: <Text fontWeight='semibold'>{time}</Text>
+          </Text>
+        </HStack>
         <View pb='4'>
           {workout?.exercises?.map((exercise) => (
             <View>
               <HStack ml='4'>
-                <Text>{exercise.name}</Text>
+                <Text>
+                  {exercise.name}
+                  {exercise.name !== '' ? ` - ` : null}
+                </Text>
                 <HStack>
-                  <Text>{exercise.reps} reps</Text>
-                  <Text> x {exercise.sets} sets</Text>
+                  <Text>
+                    {exercise.reps}
+                    {exercise.reps !== '' ? ` reps` : null}
+                  </Text>
+                  <Text>
+                    {exercise.sets !== '' ? ` x ` : null}
+                    {exercise.sets} {exercise.sets !== '' ? `sets` : null}
+                  </Text>
                 </HStack>
               </HStack>
             </View>
