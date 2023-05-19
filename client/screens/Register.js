@@ -12,7 +12,8 @@ import {
   Input,
 } from 'native-base'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../firebase/firebase'
+import { auth, database } from '../firebase/firebase'
+import { collection, doc, setDoc } from 'firebase/firestore'
 
 export const Register = ({ navigation }) => {
   const [field, setField] = useState({
@@ -42,14 +43,30 @@ export const Register = ({ navigation }) => {
     }
 
     try {
-      await createUserWithEmailAndPassword(
-        auth,
-        field.email,
-        field.password
-      ).then((userCredentials) => {
-        const user = userCredentials.user
-        console.log('User successfully registered', console.log(user))
-      })
+      await createUserWithEmailAndPassword(auth, field.email, field.password)
+        .then((userCredentials) => {
+          const user = userCredentials.user
+          console.log('User successfully registered', console.log(user))
+
+          // User data for other collection
+          const userDocRef = doc(database, 'users', auth.currentUser.uid)
+          const userData = {
+            profilePic: null,
+            dateOfBirth: '',
+            weight: '',
+            units: 'pounds',
+            height: '',
+            tags: [],
+            exerciseTemplates: [],
+          }
+
+          setDoc(userDocRef, userData).then((res) =>
+            console.log('User collection created')
+          )
+        })
+        .catch((err) =>
+          console.log('Error when creating user in users collection', err)
+        )
     } catch (error) {
       setField({
         ...field,
