@@ -27,7 +27,13 @@ const Profile = ({ navigation }) => {
       mx='auto'
       p='2'
     >
-      <View mx='auto' p='6'>
+      <View
+        mx='auto'
+        p={editing ? `0` : `6`}
+        px={editing ? `6` : `0`}
+        pt='6'
+        pb={editing ? `2` : `0`}
+      >
         <Image
           size='120'
           borderColor='gray.500'
@@ -43,6 +49,13 @@ const Profile = ({ navigation }) => {
           alt='Profile Picture of User'
         />
       </View>
+      {editing ? (
+        <Button variant='ghost' onPress={() => {}} w='1/2' mx='auto'>
+          <Text fontSize='xs' fontWeight='semibold'>
+            Change profile picture
+          </Text>
+        </Button>
+      ) : null}
       <View w='75%' mx='auto'>
         <Text mt='4' mb='2' fontWeight={'semibold'}>
           Account Details
@@ -162,22 +175,6 @@ const Profile = ({ navigation }) => {
               Save Changes
             </Button>
           )}
-          {/* <Button
-            w='1/3'
-            bg='warning.400'
-            onPress={() => {
-              signOut(auth)
-                .then(() => {
-                  // Sign out successful
-                  console.log('signed out')
-                })
-                .catch((err) => {
-                  console.log('An error occurred when logging out', err)
-                })
-            }}
-          >
-            Logout
-          </Button> */}
         </HStack>
       </View>
     </ScrollView>
