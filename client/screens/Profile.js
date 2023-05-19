@@ -9,11 +9,12 @@ import {
   View,
 } from 'native-base'
 import { auth } from '../firebase/firebase'
-import React from 'react'
-import defaultPfp from '../assets/defaultPfppng.png'
+import React, { useState, useEffect } from 'react'
+import { signOut } from 'firebase/auth'
 
 const Profile = ({ navigation }) => {
   const currentUser = auth.currentUser
+  const [editing, setEditing] = useState(false)
 
   return (
     <ScrollView
@@ -55,12 +56,15 @@ const Profile = ({ navigation }) => {
                   ? currentUser.displayName
                   : `No name given`
               }
-              isDisabled='true'
+              isDisabled={!editing ? true : false}
             />
           </View>
           <View>
             <Text fontSize='xs'>Email</Text>
-            <Input placeholder={currentUser.email} isDisabled='true' />
+            <Input
+              placeholder={currentUser.email}
+              isDisabled={!editing ? true : false}
+            />
           </View>
           <View>
             <Text fontSize='xs'>Phone Number</Text>
@@ -70,7 +74,7 @@ const Profile = ({ navigation }) => {
                   ? currentUser.phoneNumber
                   : `No number given`
               }
-              isDisabled='true'
+              isDisabled={!editing ? true : false}
             />
           </View>
         </VStack>
@@ -82,33 +86,98 @@ const Profile = ({ navigation }) => {
           <View></View>
           <View>
             <Text fontSize='xs'>Weight</Text>
-            <Input placeholder={'Weight'} isDisabled='true' />
+            <Input
+              placeholder={'Weight'}
+              isDisabled={!editing ? true : false}
+            />
           </View>
           <View>
             <Text fontSize='xs'>Height</Text>
-            <Input placeholder={'Height'} isDisabled='true' />
+            <Input
+              placeholder={'Height'}
+              isDisabled={!editing ? true : false}
+            />
           </View>
           <View>
             <Text fontSize='xs'>Age</Text>
-            <Input placeholder={'Age'} isDisabled='true' />
+            <Input placeholder={'Age'} isDisabled={!editing ? true : false} />
           </View>
           <View>
             <Text fontSize='xs'>Sex</Text>
-            <Input placeholder={'Sex'} isDisabled='true' />
+            <Input placeholder={'Sex'} isDisabled={!editing ? true : false} />
           </View>
         </VStack>
       </View>
       <View mt='12' pb='12'>
-        <Button mx='12' mb='4' bg='info.500'>
-          Edit Profile
-        </Button>
+        {!editing ? (
+          <Button mx='12' mb='4' bg='info.500' onPress={() => setEditing(true)}>
+            Edit Profile
+          </Button>
+        ) : (
+          <Button
+            mx='12'
+            mb='4'
+            bg='coolGray.400'
+            borderWidth='1'
+            isDisabled='true'
+          >
+            <Text color='black' fontWeight={'bold'}>
+              Editing
+            </Text>
+          </Button>
+        )}
         <HStack space='5' mx='auto'>
-          <Button w='1/3' bg='blueGray.400'>
-            Settings
-          </Button>
-          <Button w='1/3' bg='warning.400'>
+          {!editing ? (
+            <Button
+              w='1/3'
+              bg='blueGray.400'
+              onPress={() => navigation.navigate('Settings')}
+            >
+              Settings
+            </Button>
+          ) : (
+            <Button w='1/3' bg='danger.500' onPress={() => setEditing(false)}>
+              Cancel Edit
+            </Button>
+          )}
+          {!editing ? (
+            <Button
+              w='1/3'
+              bg='warning.400'
+              onPress={() => {
+                signOut(auth)
+                  .then(() => {
+                    // Sign out successful
+                    console.log('signed out')
+                  })
+                  .catch((err) => {
+                    console.log('An error occurred when logging out', err)
+                  })
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button w='1/3' bg='tertiary.500'>
+              Save Changes
+            </Button>
+          )}
+          {/* <Button
+            w='1/3'
+            bg='warning.400'
+            onPress={() => {
+              signOut(auth)
+                .then(() => {
+                  // Sign out successful
+                  console.log('signed out')
+                })
+                .catch((err) => {
+                  console.log('An error occurred when logging out', err)
+                })
+            }}
+          >
             Logout
-          </Button>
+          </Button> */}
         </HStack>
       </View>
     </ScrollView>
