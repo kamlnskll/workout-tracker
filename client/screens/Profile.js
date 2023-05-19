@@ -10,7 +10,7 @@ import {
 } from 'native-base'
 import { auth } from '../firebase/firebase'
 import React from 'react'
-import defaultPfp from '../assets/defaultPfppng.png'
+import { signOut } from 'firebase/auth'
 
 const Profile = ({ navigation }) => {
   const currentUser = auth.currentUser
@@ -110,7 +110,20 @@ const Profile = ({ navigation }) => {
           >
             Settings
           </Button>
-          <Button w='1/3' bg='warning.400'>
+          <Button
+            w='1/3'
+            bg='warning.400'
+            onPress={() => {
+              signOut(auth)
+                .then(() => {
+                  // Sign out successful
+                  console.log('signed out')
+                })
+                .catch((err) => {
+                  console.log('An error occurred when logging out', err)
+                })
+            }}
+          >
             Logout
           </Button>
         </HStack>

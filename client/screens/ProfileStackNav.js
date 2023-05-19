@@ -4,6 +4,7 @@ import Profile from './Profile'
 import { createStackNavigator } from '@react-navigation/stack'
 import { View } from 'native-base'
 import Settings from './Settings'
+
 const ProfileStackNav = ({ navigation }) => {
   const Stack = createStackNavigator()
 
