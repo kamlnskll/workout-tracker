@@ -103,7 +103,11 @@ const Profile = ({ navigation }) => {
           Edit Profile
         </Button>
         <HStack space='5' mx='auto'>
-          <Button w='1/3' bg='blueGray.400'>
+          <Button
+            w='1/3'
+            bg='blueGray.400'
+            onPress={() => navigation.navigate('Settings')}
+          >
             Settings
           </Button>
           <Button w='1/3' bg='warning.400'>

@@ -3,7 +3,7 @@ import { Home } from './Home'
 import Profile from './Profile'
 import { createStackNavigator } from '@react-navigation/stack'
 import { View } from 'native-base'
-
+import Settings from './Settings'
 const ProfileStackNav = ({ navigation }) => {
   const Stack = createStackNavigator()
 
@@ -14,7 +14,7 @@ const ProfileStackNav = ({ navigation }) => {
         component={ProfileScreen}
         screenOptions={{ headerShown: false }}
       />
-      <Stack.Screen name='Settings' component={SavedWorkoutScreen} />
+      <Stack.Screen name='Settings' component={SettingsScreen} />
     </Stack.Navigator>
   )
 }
@@ -27,12 +27,12 @@ const ProfileScreen = ({ navigation }) => {
   )
 }
 
-const SavedWorkoutScreen = ({ route, navigation }) => {
+const SettingsScreen = ({ navigation }) => {
   return (
     <View>
-      <SavedWorkout route={route} navigation={navigation} id={''} />
+      <Settings navigation={navigation} />
     </View>
   )
 }
 
-export default HomeStackNav
+export default ProfileStackNav
