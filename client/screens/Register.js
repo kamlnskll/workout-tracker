@@ -56,6 +56,7 @@ export const Register = ({ navigation }) => {
             weight: '',
             units: 'pounds',
             height: '',
+            sex: '',
             tags: [],
             exerciseTemplates: [],
           }

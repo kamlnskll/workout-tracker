@@ -16,6 +16,7 @@ import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
 const Profile = ({ navigation }) => {
   const currentUser = auth.currentUser
   const [editing, setEditing] = useState(false)
+  const [existingData, setExistingData] = useState(null)
   const [userData, setUserData] = useState({
     displayName: null,
     photoURL: null,
@@ -25,19 +26,18 @@ const Profile = ({ navigation }) => {
     dateOfBirth: '',
     sex: '',
   })
-  const [comparativeData, setComparativeData] = useState(null)
   const userDocRef = doc(database, 'users', currentUser.uid)
 
   useEffect(async () => {
     const userSnapshot = await getDoc(userDocRef)
-    const existingData = await userSnapshot.data()
+    const fetchedData = userSnapshot.data()
     setUserData({
-      weight: existingData.weight,
-      height: existingData.height,
-      dateOfBirth: existingData.dateOfBirth,
-      sex: existingData.sex,
+      weight: fetchedData.weight,
+      height: fetchedData.height,
+      dateOfBirth: fetchedData.dateOfBirth,
+      sex: fetchedData.sex,
     })
-    setComparativeData(existingData)
+    setExistingData(fetchedData)
 
     // Set the data from the user collection
   }, [])
@@ -54,35 +54,35 @@ const Profile = ({ navigation }) => {
   // }
 
   const saveProfileEdits = async () => {
-    const userSnapshot = await getDoc(userDocRef)
-    const existingData = await userSnapshot.data()
+    // const userSnapshot = await getDoc(userDocRef)
+    // const fetchedData = await userSnapshot.data()
 
     const newDataForUserCollection = {}
     const newDataForUserObject = {}
 
     console.log(existingData)
     // Compare and update the fields only if they are different
-    if (userData.displayName !== currentUser.displayName) {
+    if (userData?.displayName !== currentUser?.displayName) {
       newDataForUserObject.displayName = userData.displayName
     }
 
-    if (userData.photoURL !== currentUser.photoURL) {
+    if (userData?.photoURL !== currentUser?.photoURL) {
       newDataForUserObject.photoURL = userData.photoURL
     }
 
-    if (userData.phoneNumber !== currentUser.phoneNumber) {
+    if (userData?.phoneNumber !== currentUser?.phoneNumber) {
       newDataForUserObject.phoneNumber = userData.phoneNumber
     }
 
-    if (userData.weight !== existingData.weight) {
+    if (userData?.weight !== existingData?.weight) {
       newDataForUserCollection.weight = userData.weight
     }
 
-    if (userData.height !== existingData.height) {
+    if (userData?.height !== existingData?.height) {
       newDataForUserCollection.height = userData.height
     }
 
-    if (userData.dateOfBirth !== existingData.dateOfBirth) {
+    if (userData?.dateOfBirth !== existingData?.dateOfBirth) {
       newDataForUserCollection.dateOfBirth = userData.dateOfBirth
     }
 
@@ -218,9 +218,7 @@ const Profile = ({ navigation }) => {
           <View>
             <Text fontSize='xs'>Height</Text>
             <Input
-              placeholder={
-                existingData.height !== '' ? userData.height : 'Height'
-              }
+              placeholder={userData.height !== '' ? userData.height : 'Height'}
               isDisabled={!editing ? true : false}
               onChangeText={(value) => handleInputChange('height', value)}
             />
