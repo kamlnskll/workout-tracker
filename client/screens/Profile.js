@@ -8,13 +8,124 @@ import {
   VStack,
   View,
 } from 'native-base'
-import { auth } from '../firebase/firebase'
+import { auth, database } from '../firebase/firebase'
 import React, { useState, useEffect } from 'react'
-import { signOut } from 'firebase/auth'
+import { signOut, updateProfile } from 'firebase/auth'
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
 
 const Profile = ({ navigation }) => {
   const currentUser = auth.currentUser
   const [editing, setEditing] = useState(false)
+  const [existingData, setExistingData] = useState(null)
+  const [userData, setUserData] = useState({
+    displayName: null,
+    photoURL: null,
+    phoneNumber: null,
+    weight: '',
+    height: '',
+    dateOfBirth: '',
+    sex: '',
+  })
+  const userDocRef = doc(database, 'users', currentUser.uid)
+
+  useEffect(async () => {
+    const userSnapshot = await getDoc(userDocRef)
+    const fetchedData = userSnapshot.data()
+    setUserData({
+      weight: fetchedData.weight,
+      height: fetchedData.height,
+      dateOfBirth: fetchedData.dateOfBirth,
+      sex: fetchedData.sex,
+    })
+    setExistingData(fetchedData)
+
+    // Set the data from the user collection
+  }, [])
+
+  // Save changes to made to profile. Name, email, ph# and pfp will be Firebase User obj and the others will be Firestore so we need to make up to two queries depending on if a value in those two categories has changed
+
+  // const editWorkout = async (targetDoc) => {
+
+  //   // For editing workouts
+  //   const workoutDoc = doc(database, 'workouts', targetDoc)
+  //   const editedData = {}
+
+  //   await setDoc(workoutDoc, editedData)
+  // }
+
+  const saveProfileEdits = async () => {
+    // const userSnapshot = await getDoc(userDocRef)
+    // const fetchedData = await userSnapshot.data()
+
+    const newDataForUserCollection = {}
+    const newDataForUserObject = {}
+
+    console.log(existingData)
+    // Compare and update the fields only if they are different
+    if (userData?.displayName !== currentUser?.displayName) {
+      newDataForUserObject.displayName = userData.displayName
+    }
+
+    if (userData?.photoURL !== currentUser?.photoURL) {
+      newDataForUserObject.photoURL = userData.photoURL
+    }
+
+    if (userData?.phoneNumber !== currentUser?.phoneNumber) {
+      newDataForUserObject.phoneNumber = userData.phoneNumber
+    }
+
+    if (userData?.weight !== existingData?.weight) {
+      newDataForUserCollection.weight = userData.weight
+    }
+
+    if (userData?.height !== existingData?.height) {
+      newDataForUserCollection.height = userData.height
+    }
+
+    if (userData?.dateOfBirth !== existingData?.dateOfBirth) {
+      newDataForUserCollection.dateOfBirth = userData.dateOfBirth
+    }
+
+    // Update the document only if there are changes
+    if (Object.keys(newDataForUserCollection).length > 0) {
+      try {
+        await updateDoc(userDocRef, newDataForUserCollection).then(() => {
+          console.log('Profile in User Collection updated')
+          setEditing(false)
+        })
+      } catch (error) {
+        console.log('Error occurred: ', error)
+      }
+    } else {
+      console.log('No changes to update in User Collection')
+    }
+
+    // For editing info in the user object
+    if (Object.keys(newDataForUserObject).length > 0) {
+      try {
+        updateProfile(currentUser, {
+          displayName: userData.displayName,
+          photoURL: userData.photoURL,
+        })
+          .then(() => {
+            console.log('Profile Updated in User Object')
+            setEditing(false)
+          })
+          .catch((error) => {
+            console.log('Error occurred while updating profile: ', error)
+          })
+      } catch (err) {
+        console.log('Error: ', err)
+      }
+    }
+  }
+
+  const handleInputChange = (key, value) => {
+    setUserData((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }))
+  }
 
   return (
     <ScrollView
@@ -70,14 +181,12 @@ const Profile = ({ navigation }) => {
                   : `No name given`
               }
               isDisabled={!editing ? true : false}
+              onChangeText={(value) => handleInputChange('displayName', value)}
             />
           </View>
           <View>
             <Text fontSize='xs'>Email</Text>
-            <Input
-              placeholder={currentUser.email}
-              isDisabled={!editing ? true : false}
-            />
+            <Input placeholder={currentUser.email} isDisabled='true' />
           </View>
           <View>
             <Text fontSize='xs'>Phone Number</Text>
@@ -88,6 +197,7 @@ const Profile = ({ navigation }) => {
                   : `No number given`
               }
               isDisabled={!editing ? true : false}
+              onChangeText={(value) => handleInputChange('phoneNumber', value)}
             />
           </View>
         </VStack>
@@ -100,24 +210,36 @@ const Profile = ({ navigation }) => {
           <View>
             <Text fontSize='xs'>Weight</Text>
             <Input
-              placeholder={'Weight'}
+              placeholder={userData.weight !== '' ? userData.weight : 'Weight'}
               isDisabled={!editing ? true : false}
+              onChangeText={(value) => handleInputChange('weight', value)}
             />
           </View>
           <View>
             <Text fontSize='xs'>Height</Text>
             <Input
-              placeholder={'Height'}
+              placeholder={userData.height !== '' ? userData.height : 'Height'}
               isDisabled={!editing ? true : false}
+              onChangeText={(value) => handleInputChange('height', value)}
             />
           </View>
           <View>
             <Text fontSize='xs'>Age</Text>
-            <Input placeholder={'Age'} isDisabled={!editing ? true : false} />
+            <Input
+              placeholder={
+                userData.dateOfBirth !== '' ? userData.dateOfBirth : 'Age'
+              }
+              isDisabled={!editing ? true : false}
+              onChangeText={(value) => handleInputChange('dateOfBirth', value)}
+            />
           </View>
           <View>
             <Text fontSize='xs'>Sex</Text>
-            <Input placeholder={'Sex'} isDisabled={!editing ? true : false} />
+            <Input
+              placeholder={userData.sex !== '' ? userData.sex : 'Sex'}
+              isDisabled={!editing ? true : false}
+              onChangeText={(value) => handleInputChange('sex', value)}
+            />
           </View>
         </VStack>
       </View>
@@ -171,7 +293,7 @@ const Profile = ({ navigation }) => {
               Logout
             </Button>
           ) : (
-            <Button w='1/3' bg='tertiary.500'>
+            <Button w='1/3' bg='tertiary.500' onPress={saveProfileEdits}>
               Save Changes
             </Button>
           )}
