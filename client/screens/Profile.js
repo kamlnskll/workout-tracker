@@ -74,7 +74,7 @@ const Profile = ({ navigation }) => {
       newDataForUserCollection.dateOfBirth = userData.dateOfBirth
     }
 
-    // Update the document only if there are changes
+    // Update the user document only if there are changes
     if (Object.keys(newDataForUserCollection).length > 0) {
       try {
         await updateDoc(userDocRef, newDataForUserCollection).then(() => {
