@@ -11,7 +11,7 @@ import {
 import { auth, database } from '../firebase/firebase'
 import React, { useState, useEffect } from 'react'
 import { signOut, updateProfile } from 'firebase/auth'
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
 
 const Profile = ({ navigation }) => {
   const currentUser = auth.currentUser
@@ -28,35 +28,23 @@ const Profile = ({ navigation }) => {
   })
   const userDocRef = doc(database, 'users', currentUser.uid)
 
-  useEffect(async () => {
-    const userSnapshot = await getDoc(userDocRef)
-    const fetchedData = userSnapshot.data()
-    setUserData({
-      weight: fetchedData.weight,
-      height: fetchedData.height,
-      dateOfBirth: fetchedData.dateOfBirth,
-      sex: fetchedData.sex,
-    })
-    setExistingData(fetchedData)
+  useEffect(() => {
+    const fetchData = async () => {
+      const userSnapshot = await getDoc(userDocRef)
+      const fetchedData = userSnapshot.data()
+      setUserData({
+        weight: fetchedData.weight,
+        height: fetchedData.height,
+        dateOfBirth: fetchedData.dateOfBirth,
+        sex: fetchedData.sex,
+      })
+      setExistingData(fetchedData)
+    }
 
-    // Set the data from the user collection
+    fetchData()
   }, [])
 
-  // Save changes to made to profile. Name, email, ph# and pfp will be Firebase User obj and the others will be Firestore so we need to make up to two queries depending on if a value in those two categories has changed
-
-  // const editWorkout = async (targetDoc) => {
-
-  //   // For editing workouts
-  //   const workoutDoc = doc(database, 'workouts', targetDoc)
-  //   const editedData = {}
-
-  //   await setDoc(workoutDoc, editedData)
-  // }
-
   const saveProfileEdits = async () => {
-    // const userSnapshot = await getDoc(userDocRef)
-    // const fetchedData = await userSnapshot.data()
-
     const newDataForUserCollection = {}
     const newDataForUserObject = {}
 
