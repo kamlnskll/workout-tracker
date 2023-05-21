@@ -12,11 +12,13 @@ import { auth, database } from '../firebase/firebase'
 import React, { useState, useEffect } from 'react'
 import { signOut, updateProfile } from 'firebase/auth'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import * as ImagePicker from 'expo-image-picker'
 
 const Profile = ({ navigation }) => {
   const currentUser = auth.currentUser
   const [editing, setEditing] = useState(false)
   const [existingData, setExistingData] = useState(null)
+  const [image, setImage] = useState(null)
   const [userData, setUserData] = useState({
     displayName: null,
     photoURL: null,
@@ -43,6 +45,21 @@ const Profile = ({ navigation }) => {
 
     fetchData()
   }, [])
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    })
+
+    console.log(result)
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri)
+    }
+  }
 
   const saveProfileEdits = async () => {
     const newDataForUserCollection = {}
@@ -138,18 +155,19 @@ const Profile = ({ navigation }) => {
           borderColor='gray.500'
           rounded='full'
           borderWidth={'0.25'}
-          source={
-            currentUser.photoURL !== null
-              ? {
-                  uri: currentUser.photoURL,
-                }
-              : require('../assets/defaultPfppng.png')
-          }
+          source={{ uri: image }}
+          // ={
+          //   currentUser.photoURL !== null
+          //     ? {
+          //         uri: currentUser.photoURL,
+          //       }
+          //     : require('../assets/defaultPfppng.png')
+          // }
           alt='Profile Picture of User'
         />
       </View>
       {editing ? (
-        <Button variant='ghost' onPress={() => {}} w='1/2' mx='auto'>
+        <Button variant='ghost' onPress={pickImage} w='1/2' mx='auto'>
           <Text fontSize='xs' fontWeight='semibold'>
             Change profile picture
           </Text>
