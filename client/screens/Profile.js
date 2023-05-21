@@ -54,11 +54,18 @@ const Profile = ({ navigation }) => {
       quality: 1,
     })
 
-    console.log(result)
-
     if (!result.canceled) {
       setImage(result.assets[0].uri)
     }
+
+    console.log(image)
+  }
+
+  const uploadImage = async () => {
+    const response = await fetch(image)
+    const blob = await response.blob()
+    const filename = image.substring(image.lastIndexOf('/') + 1)
+    var ref = ''
   }
 
   const saveProfileEdits = async () => {
@@ -150,21 +157,45 @@ const Profile = ({ navigation }) => {
         pt='6'
         pb={editing ? `2` : `0`}
       >
-        <Image
+        {image === '' || image === null ? (
+          <Image
+            size='120'
+            borderColor='gray.500'
+            rounded='full'
+            borderWidth={'0.25'}
+            source={
+              currentUser.photoURL !== null || currentUser.photoURL !== ''
+                ? {
+                    uri: currentUser.photoURL,
+                  }
+                : { uri: require('../assets/defaultPfppng.png') }
+            }
+            alt='Profile Picture of User'
+          />
+        ) : (
+          <Image
+            size='120'
+            borderColor='gray.500'
+            rounded='full'
+            borderWidth={'0.25'}
+            source={{ uri: image }}
+            alt='Profile Picture of User'
+          />
+        )}
+        {/* <Image
           size='120'
           borderColor='gray.500'
           rounded='full'
           borderWidth={'0.25'}
-          source={{ uri: image }}
-          // ={
-          //   currentUser.photoURL !== null
-          //     ? {
-          //         uri: currentUser.photoURL,
-          //       }
-          //     : require('../assets/defaultPfppng.png')
-          // }
+          source={
+            currentUser.photoURL !== ''
+              ? {
+                  uri: currentUser.photoURL,
+                }
+              : require('../assets/defaultPfppng.png')
+          }
           alt='Profile Picture of User'
-        />
+        /> */}
       </View>
       {editing ? (
         <Button variant='ghost' onPress={pickImage} w='1/2' mx='auto'>
@@ -277,7 +308,14 @@ const Profile = ({ navigation }) => {
               Settings
             </Button>
           ) : (
-            <Button w='1/3' bg='danger.500' onPress={() => setEditing(false)}>
+            <Button
+              w='1/3'
+              bg='danger.500'
+              onPress={() => {
+                setImage(null)
+                setEditing(false)
+              }}
+            >
               Cancel Edit
             </Button>
           )}
