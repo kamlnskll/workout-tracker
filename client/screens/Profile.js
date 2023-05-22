@@ -8,15 +8,17 @@ import {
   VStack,
   View,
 } from 'native-base'
-import { auth, database } from '../firebase/firebase'
+import { auth, database, storage } from '../firebase/firebase'
 import React, { useState, useEffect } from 'react'
 import { signOut, updateProfile } from 'firebase/auth'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import * as ImagePicker from 'expo-image-picker'
 
 const Profile = ({ navigation }) => {
   const currentUser = auth.currentUser
   const [editing, setEditing] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [existingData, setExistingData] = useState(null)
   const [image, setImage] = useState(null)
   const [userData, setUserData] = useState({
@@ -57,15 +59,31 @@ const Profile = ({ navigation }) => {
     if (!result.canceled) {
       setImage(result.assets[0].uri)
     }
-
-    console.log(image)
   }
 
   const uploadImage = async () => {
+    // setUploading(true)
     const response = await fetch(image)
     const blob = await response.blob()
-    const filename = image.substring(image.lastIndexOf('/') + 1)
-    var ref = ''
+    const storageRef = ref(storage, `profilePics/${currentUser.uid}`)
+    const upload = ''
+
+    try {
+      console.log('blob', blob)
+      console.log('response', response)
+
+      // await uploadBytes(storageRef, blob)
+      //   .then((snapshot) => {
+      //     console.log('Uploaded file to storage', snapshot)
+      //     // getDownloadURL(storageRef).then((url) =>
+      //     //   console.log('This is download URL', url)
+      //     // )
+      //   })
+      //   .catch((err) => console.log(err))
+      // console.log('blob: ', blob)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const saveProfileEdits = async () => {
@@ -157,6 +175,7 @@ const Profile = ({ navigation }) => {
         pt='6'
         pb={editing ? `2` : `0`}
       >
+        <Button onPress={uploadImage}>TEST BTN FOR IMG</Button>
         {image === '' || image === null ? (
           <Image
             size='120'
