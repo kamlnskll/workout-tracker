@@ -67,7 +67,16 @@ const Profile = ({ navigation }) => {
     const response = await fetch(image)
     const bytes = await response.blob()
 
-    await uploadBytes(storageRef, bytes).then((res) => console.log(res))
+    await uploadBytes(storageRef, bytes)
+      .then(() => {
+        getDownloadURL(storageRef)
+          .then((url) => {
+            console.log('Here is the download URL', url)
+            setUserData({ photoURL: url })
+          })
+          .catch((err) => console.log(err))
+      })
+      .catch((err) => console.log(err))
 
     // console.log(image, bytes, response)
   }
@@ -100,6 +109,12 @@ const Profile = ({ navigation }) => {
 
     if (userData?.dateOfBirth !== existingData?.dateOfBirth) {
       newDataForUserCollection.dateOfBirth = userData.dateOfBirth
+    }
+
+    if (image !== null || image !== '') {
+      await uploadImage()
+        .then(() => console.log('Profile picture uploaded'))
+        .catch((err) => console.log('Error occurred: ', err))
     }
 
     // Update the user document only if there are changes
@@ -161,7 +176,6 @@ const Profile = ({ navigation }) => {
         pt='6'
         pb={editing ? `2` : `0`}
       >
-        <Button onPress={uploadImage}>TEST BTN FOR IMG</Button>
         {image === '' || image === null ? (
           <Image
             size='120'
