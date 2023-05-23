@@ -31,6 +31,7 @@ const Profile = ({ navigation }) => {
     sex: '',
   })
   const userDocRef = doc(database, 'users', currentUser.uid)
+  const storageRef = ref(storage, `profilePics/${currentUser.uid}`)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +54,7 @@ const Profile = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0,
     })
 
     if (!result.canceled) {
@@ -62,28 +63,13 @@ const Profile = ({ navigation }) => {
   }
 
   const uploadImage = async () => {
-    // setUploading(true)
+    // Get img uri and convert to bytes using blob
     const response = await fetch(image)
-    const blob = await response.blob()
-    const storageRef = ref(storage, `profilePics/${currentUser.uid}`)
-    const upload = ''
+    const bytes = await response.blob()
 
-    try {
-      console.log('blob', blob)
-      console.log('response', response)
+    await uploadBytes(storageRef, bytes).then((res) => console.log(res))
 
-      // await uploadBytes(storageRef, blob)
-      //   .then((snapshot) => {
-      //     console.log('Uploaded file to storage', snapshot)
-      //     // getDownloadURL(storageRef).then((url) =>
-      //     //   console.log('This is download URL', url)
-      //     // )
-      //   })
-      //   .catch((err) => console.log(err))
-      // console.log('blob: ', blob)
-    } catch (err) {
-      console.log(err)
-    }
+    // console.log(image, bytes, response)
   }
 
   const saveProfileEdits = async () => {
