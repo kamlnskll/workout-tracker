@@ -8,15 +8,19 @@ import {
   VStack,
   View,
 } from 'native-base'
-import { auth, database } from '../firebase/firebase'
+import { auth, database, storage } from '../firebase/firebase'
 import React, { useState, useEffect } from 'react'
 import { signOut, updateProfile } from 'firebase/auth'
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
+import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import * as ImagePicker from 'expo-image-picker'
 
 const Profile = ({ navigation }) => {
   const currentUser = auth.currentUser
   const [editing, setEditing] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [existingData, setExistingData] = useState(null)
+  const [image, setImage] = useState(null)
   const [userData, setUserData] = useState({
     displayName: null,
     photoURL: null,
@@ -27,36 +31,57 @@ const Profile = ({ navigation }) => {
     sex: '',
   })
   const userDocRef = doc(database, 'users', currentUser.uid)
+  const storageRef = ref(storage, `profilePics/${currentUser.uid}`)
 
-  useEffect(async () => {
-    const userSnapshot = await getDoc(userDocRef)
-    const fetchedData = userSnapshot.data()
-    setUserData({
-      weight: fetchedData.weight,
-      height: fetchedData.height,
-      dateOfBirth: fetchedData.dateOfBirth,
-      sex: fetchedData.sex,
-    })
-    setExistingData(fetchedData)
+  useEffect(() => {
+    const fetchData = async () => {
+      const userSnapshot = await getDoc(userDocRef)
+      const fetchedData = userSnapshot.data()
+      setUserData({
+        weight: fetchedData.weight,
+        height: fetchedData.height,
+        dateOfBirth: fetchedData.dateOfBirth,
+        sex: fetchedData.sex,
+      })
+      setExistingData(fetchedData)
+    }
 
-    // Set the data from the user collection
+    fetchData()
   }, [])
 
-  // Save changes to made to profile. Name, email, ph# and pfp will be Firebase User obj and the others will be Firestore so we need to make up to two queries depending on if a value in those two categories has changed
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0,
+    })
 
-  // const editWorkout = async (targetDoc) => {
+    if (!result.canceled) {
+      setImage(result.assets[0].uri)
+    }
+  }
 
-  //   // For editing workouts
-  //   const workoutDoc = doc(database, 'workouts', targetDoc)
-  //   const editedData = {}
+  const uploadImage = async () => {
+    // Get img uri and convert to bytes using blob
+    const response = await fetch(image)
+    const bytes = await response.blob()
 
-  //   await setDoc(workoutDoc, editedData)
-  // }
+    await uploadBytes(storageRef, bytes)
+      .then(() => {
+        getDownloadURL(storageRef)
+          .then((url) => {
+            console.log('Here is the download URL', url)
+            setUserData({ photoURL: url })
+          })
+          .catch((err) => console.log(err))
+      })
+      .catch((err) => console.log(err))
+
+    // console.log(image, bytes, response)
+  }
 
   const saveProfileEdits = async () => {
-    // const userSnapshot = await getDoc(userDocRef)
-    // const fetchedData = await userSnapshot.data()
-
     const newDataForUserCollection = {}
     const newDataForUserObject = {}
 
@@ -86,7 +111,13 @@ const Profile = ({ navigation }) => {
       newDataForUserCollection.dateOfBirth = userData.dateOfBirth
     }
 
-    // Update the document only if there are changes
+    if (image !== null || image !== '') {
+      await uploadImage()
+        .then(() => console.log('Profile picture uploaded'))
+        .catch((err) => console.log('Error occurred: ', err))
+    }
+
+    // Update the user document only if there are changes
     if (Object.keys(newDataForUserCollection).length > 0) {
       try {
         await updateDoc(userDocRef, newDataForUserCollection).then(() => {
@@ -145,23 +176,48 @@ const Profile = ({ navigation }) => {
         pt='6'
         pb={editing ? `2` : `0`}
       >
-        <Image
+        {image === '' || image === null ? (
+          <Image
+            size='120'
+            borderColor='gray.500'
+            rounded='full'
+            borderWidth={'0.25'}
+            source={
+              currentUser.photoURL !== null || currentUser.photoURL !== ''
+                ? {
+                    uri: currentUser.photoURL,
+                  }
+                : { uri: require('../assets/defaultPfppng.png') }
+            }
+            alt='Profile Picture of User'
+          />
+        ) : (
+          <Image
+            size='120'
+            borderColor='gray.500'
+            rounded='full'
+            borderWidth={'0.25'}
+            source={{ uri: image }}
+            alt='Profile Picture of User'
+          />
+        )}
+        {/* <Image
           size='120'
           borderColor='gray.500'
           rounded='full'
           borderWidth={'0.25'}
           source={
-            currentUser.photoURL !== null
+            currentUser.photoURL !== ''
               ? {
                   uri: currentUser.photoURL,
                 }
               : require('../assets/defaultPfppng.png')
           }
           alt='Profile Picture of User'
-        />
+        /> */}
       </View>
       {editing ? (
-        <Button variant='ghost' onPress={() => {}} w='1/2' mx='auto'>
+        <Button variant='ghost' onPress={pickImage} w='1/2' mx='auto'>
           <Text fontSize='xs' fontWeight='semibold'>
             Change profile picture
           </Text>
@@ -271,7 +327,14 @@ const Profile = ({ navigation }) => {
               Settings
             </Button>
           ) : (
-            <Button w='1/3' bg='danger.500' onPress={() => setEditing(false)}>
+            <Button
+              w='1/3'
+              bg='danger.500'
+              onPress={() => {
+                setImage(null)
+                setEditing(false)
+              }}
+            >
               Cancel Edit
             </Button>
           )}
