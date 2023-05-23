@@ -8,9 +8,11 @@ import {
   Select,
   CheckIcon,
 } from 'native-base'
+import { useColorMode } from 'native-base'
 
 const Settings = ({ navigation }) => {
   const [units, setUnits] = useState('lbs')
+  const { toggleColorMode } = useColorMode()
 
   return (
     <View
@@ -30,7 +32,7 @@ const Settings = ({ navigation }) => {
             </Text>
           </View>
           <View mx='auto'>
-            <Switch size='sm' />
+            <Switch size='sm' onPress={toggleColorMode} />
           </View>
         </HStack>
         <HStack justifyContent={'space-between'}>
