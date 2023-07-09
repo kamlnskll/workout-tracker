@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Input, Text, View, HStack, Flex, Pressable } from 'native-base'
+import {
+  Button,
+  Input,
+  Text,
+  View,
+  HStack,
+  VStack,
+  Flex,
+  Pressable,
+} from 'native-base'
 import dayjs from 'dayjs'
 import { collection, addDoc } from 'firebase/firestore'
 import { database, auth } from '../firebase/firebase'
@@ -14,14 +23,13 @@ import { SpinningLoader } from '../components/SpinningLoader'
 // with custom
 
 export const Workout = ({ workoutData, navigation }) => {
+  const [setObject, setSetObject] = useState({ reps: 0, weight: 0 })
   const [exercises, setExercises] = useState([
-    { key: uuid.v4(), name: '', reps: '', sets: '', index: 0 },
+    { key: uuid.v4(), name: '', sets: [], index: 0 },
   ])
-
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const currentUserId = auth.currentUser.uid
-  // const currentUserID = currentUser.uid
   const date = dayjs().format('MMMM DD')
 
   useEffect(() => {
@@ -34,9 +42,25 @@ export const Workout = ({ workoutData, navigation }) => {
     const newIndex = exercises.length
     setExercises([
       ...exercises,
-      { key: uuid.v4(), name: '', reps: '', sets: '', index: newIndex },
+      {
+        key: uuid.v4(),
+        name: '',
+        sets: [],
+        index: newIndex,
+      },
     ])
   }
+
+  const addSet = () => {
+    exercises.map((exercise) => {
+      const exerciseSets = exercise.sets
+      exerciseSets.push(setObject)
+    })
+  }
+
+  const updateSet = () => {}
+
+  const deleteSet = () => {}
 
   const updateExercise = (exerciseIndex, field, value) => {
     const updatedExercises = exercises.map((exercise) => {
@@ -141,7 +165,7 @@ export const Workout = ({ workoutData, navigation }) => {
                 <Text ml='8' fontSize={'xs'} fontWeight={'semibold'}>
                   Exercise
                 </Text>
-                <HStack justifyContent='center' space={3}>
+                <HStack justifyContent='center'>
                   <Input
                     placeholder='Exercise name'
                     value={exercise.name}
@@ -151,26 +175,18 @@ export const Workout = ({ workoutData, navigation }) => {
                     h='35'
                     w='180'
                   />
-                  <Input
-                    placeholder='Sets'
-                    value={exercise.sets}
-                    onChangeText={(value) =>
-                      updateExercise(exercise.index, 'sets', value)
-                    }
-                    h='35'
-                    w='20'
-                    // mr='4'
-                  />
-                  <Input
-                    placeholder='Reps'
-                    value={exercise.reps}
-                    onChangeText={(value) =>
-                      updateExercise(exercise.index, 'reps', value)
-                    }
-                    h='35'
-                    w='20'
-                    // mr='4'
-                  />
+                  <VStack>
+                    {exercise.sets === 0 ? null : (
+                      <HStack>
+                        <Input placeholder='Reps' h='35' w='20' />
+                        <Input placeholder='Weight' h='35' w='20' />
+                      </HStack>
+                    )}
+
+                    <Button onPress={addSet} w='20' mt='0' mx='auto'>
+                      <Text fontSize='2xs'>New Set</Text>
+                    </Button>
+                  </VStack>
                 </HStack>
               </View>
             )}
