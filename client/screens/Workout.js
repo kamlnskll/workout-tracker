@@ -52,9 +52,10 @@ export const Workout = ({ workoutData, navigation }) => {
   }
 
   const addSet = () => {
-    exercises.map((exercise) => {
+    exercises.forEach((exercise) => {
       const exerciseSets = exercise.sets
       exerciseSets.push(setObject)
+      console.log(exerciseSets)
     })
   }
 
@@ -161,7 +162,7 @@ export const Workout = ({ workoutData, navigation }) => {
             previewOpenDelay={3000}
             data={exercises}
             renderItem={(exercise, rowMap) => (
-              <View key={exercise.key} h='16' bg='gray.100' my='2'>
+              <View key={exercise.key} h='40' bg='gray.100' my='2'>
                 <Text ml='8' fontSize={'xs'} fontWeight={'semibold'}>
                   Exercise
                 </Text>
@@ -176,16 +177,24 @@ export const Workout = ({ workoutData, navigation }) => {
                     w='180'
                   />
                   <VStack>
-                    {exercise.sets === 0 ? null : (
+                    {exercise.item.sets.length > 0 ? (
                       <HStack>
                         <Input placeholder='Reps' h='35' w='20' />
                         <Input placeholder='Weight' h='35' w='20' />
                       </HStack>
-                    )}
+                    ) : null}
 
                     <Button onPress={addSet} w='20' mt='0' mx='auto'>
                       <Text fontSize='2xs'>New Set</Text>
                     </Button>
+                    {/* <Button
+                      onPress={() => console.log(exercise.item.sets.length)}
+                      w='20'
+                      mt='0'
+                      mx='auto'
+                    >
+                      <Text fontSize='2xs'>TEST</Text>
+                    </Button> */}
                   </VStack>
                 </HStack>
               </View>
