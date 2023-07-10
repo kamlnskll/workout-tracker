@@ -167,6 +167,13 @@ export const Workout = ({ workoutData, navigation }) => {
           <Text color='red.600'>{error}</Text>
         </View>
         <View>
+          <HStack>
+            <Text mx='8'>Exercise Name</Text>
+            <HStack mx='auto' space='8'>
+              <Text>Reps</Text>
+              <Text>Weight</Text>
+            </HStack>
+          </HStack>
           <SwipeListView
             rightOpenValue={-130}
             previewRowKey={'0'}
@@ -175,12 +182,12 @@ export const Workout = ({ workoutData, navigation }) => {
             data={exercises}
             renderItem={(exercise, rowMap) => (
               <View key={exercise.key} h='40' bg='gray.100' my='2'>
-                <Text ml='8' fontSize={'xs'} fontWeight={'semibold'}>
-                  Exercise
-                </Text>
+                {/* <Text ml='8' fontSize={'xs'} fontWeight={'semibold'}>
+                  Exercise NUMBER WILL GO HERE
+                </Text> */}
                 <HStack justifyContent='center' space={4}>
                   <Input
-                    placeholder='Exercise name'
+                    placeholder=''
                     value={exercise.name}
                     onChangeText={(value) =>
                       updateExercise(exercise.index, 'name', value)
@@ -194,14 +201,14 @@ export const Workout = ({ workoutData, navigation }) => {
                           <>
                             <HStack>
                               <Input
-                                placeholder='Reps'
+                                placeholder=''
                                 value={set.reps}
                                 onChangeText={(value) => {}}
                                 h='35'
                                 w='20'
                               />
                               <Input
-                                placeholder='Weight'
+                                placeholder=''
                                 value={set.weight}
                                 onChangeText={(value) => {}}
                                 h='35'
