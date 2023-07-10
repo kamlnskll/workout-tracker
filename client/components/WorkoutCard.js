@@ -30,9 +30,15 @@ export const WorkoutCard = ({ workout, navigation }) => {
           <HStack space={1}>
             <Text>{exercise.name}</Text>
             <Text>-</Text>
-            <Text>
-              {exercise.sets} sets x {exercise.reps} reps{' '}
-            </Text>
+            <View>
+              {exercise.sets.map((set) => (
+                <>
+                  <Text>
+                    {set.reps} x {set.weight}
+                  </Text>
+                </>
+              ))}
+            </View>
           </HStack>
         ))}
       </VStack>

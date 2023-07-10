@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Input, Text, View, HStack, Flex, Pressable } from 'native-base'
+import {
+  Button,
+  Input,
+  Text,
+  View,
+  HStack,
+  VStack,
+  Flex,
+  Pressable,
+  AddIcon,
+  ScrollView,
+} from 'native-base'
 import dayjs from 'dayjs'
 import { collection, addDoc } from 'firebase/firestore'
 import { database, auth } from '../firebase/firebase'
@@ -14,14 +25,13 @@ import { SpinningLoader } from '../components/SpinningLoader'
 // with custom
 
 export const Workout = ({ workoutData, navigation }) => {
+  const [setObject, setSetObject] = useState({ reps: 0, weight: 0 })
   const [exercises, setExercises] = useState([
-    { key: uuid.v4(), name: '', reps: '', sets: '', index: 0 },
+    { key: uuid.v4(), name: '', sets: [], index: 0 },
   ])
-
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const currentUserId = auth.currentUser.uid
-  // const currentUserID = currentUser.uid
   const date = dayjs().format('MMMM DD')
 
   useEffect(() => {
@@ -34,9 +44,38 @@ export const Workout = ({ workoutData, navigation }) => {
     const newIndex = exercises.length
     setExercises([
       ...exercises,
-      { key: uuid.v4(), name: '', reps: '', sets: '', index: newIndex },
+      {
+        key: uuid.v4(),
+        name: '',
+        sets: [],
+        index: newIndex,
+      },
     ])
   }
+
+  const addSet = (exerciseIndex) => {
+    const fetchExercise = exercises.map((exercise) => {
+      if (exercise.index === exerciseIndex) {
+        if (exercise.sets.length === 0) {
+          return {
+            ...exercise,
+            sets: [setObject], // Add set
+          }
+        } else {
+          return {
+            ...exercise,
+            sets: [...exercise.sets, setObject],
+          }
+        }
+      }
+      return exercise
+    })
+    setExercises(fetchExercise)
+  }
+
+  const updateSet = () => {}
+
+  const deleteSet = () => {}
 
   const updateExercise = (exerciseIndex, field, value) => {
     const updatedExercises = exercises.map((exercise) => {
@@ -130,6 +169,13 @@ export const Workout = ({ workoutData, navigation }) => {
           <Text color='red.600'>{error}</Text>
         </View>
         <View>
+          <HStack>
+            <Text mx='8'>Exercise Name</Text>
+            <HStack mx='auto' space='8'>
+              <Text>Reps</Text>
+              <Text>Weight</Text>
+            </HStack>
+          </HStack>
           <SwipeListView
             rightOpenValue={-130}
             previewRowKey={'0'}
@@ -137,40 +183,112 @@ export const Workout = ({ workoutData, navigation }) => {
             previewOpenDelay={3000}
             data={exercises}
             renderItem={(exercise, rowMap) => (
-              <View key={exercise.key} h='16' bg='gray.100' my='2'>
-                <Text ml='8' fontSize={'xs'} fontWeight={'semibold'}>
-                  Exercise
-                </Text>
-                <HStack justifyContent='center' space={3}>
+              <View key={exercise.key} py='2' bgColor='blueGray.100' my='2'>
+                <HStack
+                  space={0}
+                  justifyContent={'space-evenly'}
+                  my='auto'
+                  maxH={'32'}
+                >
                   <Input
-                    placeholder='Exercise name'
+                    placeholder=''
                     value={exercise.name}
                     onChangeText={(value) =>
                       updateExercise(exercise.index, 'name', value)
                     }
-                    h='35'
+                    h='30'
                     w='180'
+                    my='auto'
                   />
-                  <Input
-                    placeholder='Sets'
-                    value={exercise.sets}
-                    onChangeText={(value) =>
-                      updateExercise(exercise.index, 'sets', value)
-                    }
-                    h='35'
-                    w='20'
-                    // mr='4'
-                  />
-                  <Input
-                    placeholder='Reps'
-                    value={exercise.reps}
-                    onChangeText={(value) =>
-                      updateExercise(exercise.index, 'reps', value)
-                    }
-                    h='35'
-                    w='20'
-                    // mr='4'
-                  />
+                  <VStack my='2' space='4'>
+                    <ScrollView px='6'>
+                      {exercise.item.sets.length > 0
+                        ? exercise.item.sets.map((set) => (
+                            <>
+                              <HStack space='2'>
+                                <Input
+                                  placeholder=''
+                                  value={set.reps}
+                                  onChangeText={(value) => {
+                                    const updatedSets = exercise.item.sets.map(
+                                      (item) => {
+                                        if (item === set) {
+                                          return {
+                                            ...item,
+                                            reps: value,
+                                          }
+                                        }
+                                        return item
+                                      }
+                                    )
+
+                                    const updatedExercises = exercises.map(
+                                      (ex) => {
+                                        if (ex.index === exercise.index) {
+                                          return {
+                                            ...ex,
+                                            sets: updatedSets,
+                                          }
+                                        }
+                                        return ex
+                                      }
+                                    )
+
+                                    setExercises(updatedExercises)
+                                  }}
+                                  h='35'
+                                  w='12'
+                                />
+                                <Input
+                                  placeholder=''
+                                  value={set.weight}
+                                  onChangeText={(value) => {
+                                    const updatedSets = exercise.item.sets.map(
+                                      (item) => {
+                                        if (item === set) {
+                                          return {
+                                            ...item,
+                                            weight: value,
+                                          }
+                                        }
+                                        return item
+                                      }
+                                    )
+
+                                    const updatedExercises = exercises.map(
+                                      (ex) => {
+                                        if (ex.index === exercise.index) {
+                                          return {
+                                            ...ex,
+                                            sets: updatedSets,
+                                          }
+                                        }
+                                        return ex
+                                      }
+                                    )
+
+                                    setExercises(updatedExercises)
+                                  }}
+                                  h='35'
+                                  w='16'
+                                />
+                              </HStack>
+                            </>
+                          ))
+                        : null}
+                      <Button
+                        onPress={() => addSet(exercise.index)}
+                        w='8'
+                        rounded={'full'}
+                        pt='4'
+                        pb='2'
+                        mx='auto'
+                        bgColor={'blueGray.100'}
+                      >
+                        <AddIcon color={'green.500'} />
+                      </Button>
+                    </ScrollView>
+                  </VStack>
                 </HStack>
               </View>
             )}
@@ -190,4 +308,15 @@ export const Workout = ({ workoutData, navigation }) => {
       </Flex>
     </View>
   )
+}
+
+{
+  /* <Button
+                      onPress={() => console.log(exercise.item.sets.length)}
+                      w='20'
+                      mt='0'
+                      mx='auto'
+                    >
+                      <Text fontSize='2xs'>TEST</Text>
+                    </Button> */
 }

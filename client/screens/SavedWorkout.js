@@ -1,4 +1,4 @@
-import { HStack, Heading, Text, View } from 'native-base'
+import { HStack, Heading, Text, View, VStack } from 'native-base'
 import React, { useEffect, useState } from 'react'
 import { getDocs, collection, query, where } from 'firebase/firestore'
 import { database } from '../firebase/firebase'
@@ -69,16 +69,22 @@ const SavedWorkout = ({ route, navigation }) => {
                   {exercise.name}
                   {exercise.name !== '' ? ` - ` : null}
                 </Text>
-                <HStack>
-                  <Text>
-                    {exercise.reps}
-                    {exercise.reps !== '' ? ` reps` : null}
-                  </Text>
-                  <Text>
-                    {exercise.sets !== '' ? ` x ` : null}
-                    {exercise.sets} {exercise.sets !== '' ? `sets` : null}
-                  </Text>
-                </HStack>
+                <VStack>
+                  {exercise.sets.map((set) => (
+                    <>
+                      <HStack>
+                        <Text>
+                          {set.reps}
+                          {set.reps !== '' ? ` reps` : null}
+                        </Text>
+                        <Text>
+                          {set.weight !== '' ? ` x ` : null}
+                          {set.weight} {set.weight !== '' ? `pounds` : null}
+                        </Text>
+                      </HStack>
+                    </>
+                  ))}
+                </VStack>
               </HStack>
             </View>
           ))}
