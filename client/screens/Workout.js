@@ -209,16 +209,68 @@ export const Workout = ({ workoutData, navigation }) => {
                                 <Input
                                   placeholder=''
                                   value={set.reps}
-                                  onChangeText={(value) => {}}
+                                  onChangeText={(value) => {
+                                    const updatedSets = exercise.item.sets.map(
+                                      (item) => {
+                                        if (item === set) {
+                                          return {
+                                            ...item,
+                                            reps: value,
+                                          }
+                                        }
+                                        return item
+                                      }
+                                    )
+
+                                    const updatedExercises = exercises.map(
+                                      (ex) => {
+                                        if (ex.index === exercise.index) {
+                                          return {
+                                            ...ex,
+                                            sets: updatedSets,
+                                          }
+                                        }
+                                        return ex
+                                      }
+                                    )
+
+                                    setExercises(updatedExercises)
+                                  }}
                                   h='35'
                                   w='12'
                                 />
                                 <Input
                                   placeholder=''
                                   value={set.weight}
-                                  onChangeText={(value) => {}}
+                                  onChangeText={(value) => {
+                                    const updatedSets = exercise.item.sets.map(
+                                      (item) => {
+                                        if (item === set) {
+                                          return {
+                                            ...item,
+                                            weight: value,
+                                          }
+                                        }
+                                        return item
+                                      }
+                                    )
+
+                                    const updatedExercises = exercises.map(
+                                      (ex) => {
+                                        if (ex.index === exercise.index) {
+                                          return {
+                                            ...ex,
+                                            sets: updatedSets,
+                                          }
+                                        }
+                                        return ex
+                                      }
+                                    )
+
+                                    setExercises(updatedExercises)
+                                  }}
                                   h='35'
-                                  w='12'
+                                  w='16'
                                 />
                               </HStack>
                             </>
