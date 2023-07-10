@@ -52,11 +52,20 @@ export const Workout = ({ workoutData, navigation }) => {
   }
 
   const addSet = () => {
-    exercises.forEach((exercise) => {
-      const exerciseSets = exercise.sets
-      exerciseSets.push(setObject)
-      console.log(exerciseSets)
+    const fetchExercise = exercises.map((exercise) => {
+      if (exercise.sets.length === 0) {
+        return {
+          ...exercise,
+          sets: [setObject], // Add set
+        }
+      } else {
+        return {
+          ...exercise,
+          sets: [...exercise.sets, setObject],
+        }
+      }
     })
+    setExercises(fetchExercise)
   }
 
   const updateSet = () => {}
@@ -166,7 +175,7 @@ export const Workout = ({ workoutData, navigation }) => {
                 <Text ml='8' fontSize={'xs'} fontWeight={'semibold'}>
                   Exercise
                 </Text>
-                <HStack justifyContent='center'>
+                <HStack justifyContent='center' space={4}>
                   <Input
                     placeholder='Exercise name'
                     value={exercise.name}
@@ -176,25 +185,32 @@ export const Workout = ({ workoutData, navigation }) => {
                     h='35'
                     w='180'
                   />
-                  <VStack>
-                    {exercise.item.sets.length > 0 ? (
-                      <HStack>
-                        <Input placeholder='Reps' h='35' w='20' />
-                        <Input placeholder='Weight' h='35' w='20' />
-                      </HStack>
-                    ) : null}
-
+                  <VStack space='3'>
+                    {exercise.item.sets.length > 0
+                      ? exercise.item.sets.map((set) => (
+                          <>
+                            <HStack>
+                              <Input
+                                placeholder='Reps'
+                                value={set.reps}
+                                onChangeText={(value) => {}}
+                                h='35'
+                                w='20'
+                              />
+                              <Input
+                                placeholder='Weight'
+                                value={set.weight}
+                                onChangeText={(value) => {}}
+                                h='35'
+                                w='20'
+                              />
+                            </HStack>
+                          </>
+                        ))
+                      : null}
                     <Button onPress={addSet} w='20' mt='0' mx='auto'>
                       <Text fontSize='2xs'>New Set</Text>
                     </Button>
-                    {/* <Button
-                      onPress={() => console.log(exercise.item.sets.length)}
-                      w='20'
-                      mt='0'
-                      mx='auto'
-                    >
-                      <Text fontSize='2xs'>TEST</Text>
-                    </Button> */}
                   </VStack>
                 </HStack>
               </View>
@@ -215,4 +231,15 @@ export const Workout = ({ workoutData, navigation }) => {
       </Flex>
     </View>
   )
+}
+
+{
+  /* <Button
+                      onPress={() => console.log(exercise.item.sets.length)}
+                      w='20'
+                      mt='0'
+                      mx='auto'
+                    >
+                      <Text fontSize='2xs'>TEST</Text>
+                    </Button> */
 }
