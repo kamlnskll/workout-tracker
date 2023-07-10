@@ -51,19 +51,22 @@ export const Workout = ({ workoutData, navigation }) => {
     ])
   }
 
-  const addSet = () => {
+  const addSet = (exerciseIndex) => {
     const fetchExercise = exercises.map((exercise) => {
-      if (exercise.sets.length === 0) {
-        return {
-          ...exercise,
-          sets: [setObject], // Add set
-        }
-      } else {
-        return {
-          ...exercise,
-          sets: [...exercise.sets, setObject],
+      if (exercise.index === exerciseIndex) {
+        if (exercise.sets.length === 0) {
+          return {
+            ...exercise,
+            sets: [setObject], // Add set
+          }
+        } else {
+          return {
+            ...exercise,
+            sets: [...exercise.sets, setObject],
+          }
         }
       }
+      return exercise
     })
     setExercises(fetchExercise)
   }
@@ -208,7 +211,12 @@ export const Workout = ({ workoutData, navigation }) => {
                           </>
                         ))
                       : null}
-                    <Button onPress={addSet} w='20' mt='0' mx='auto'>
+                    <Button
+                      onPress={() => addSet(exercise.index)}
+                      w='20'
+                      mt='0'
+                      mx='auto'
+                    >
                       <Text fontSize='2xs'>New Set</Text>
                     </Button>
                   </VStack>
