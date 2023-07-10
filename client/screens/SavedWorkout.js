@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { getDocs, collection, query, where } from 'firebase/firestore'
 import { database } from '../firebase/firebase'
 import dayjs from 'dayjs'
+import WorkoutStats from '../components/WorkoutStats'
 
 const SavedWorkout = ({ route, navigation }) => {
   const [workout, setWorkout] = useState()
@@ -89,6 +90,7 @@ const SavedWorkout = ({ route, navigation }) => {
             </View>
           ))}
         </View>
+        <WorkoutStats workoutData={workout} />
       </View>
     </View>
   )
