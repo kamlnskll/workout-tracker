@@ -8,6 +8,8 @@ import {
   VStack,
   Flex,
   Pressable,
+  AddIcon,
+  ScrollView,
 } from 'native-base'
 import dayjs from 'dayjs'
 import { collection, addDoc } from 'firebase/firestore'
@@ -181,51 +183,59 @@ export const Workout = ({ workoutData, navigation }) => {
             previewOpenDelay={3000}
             data={exercises}
             renderItem={(exercise, rowMap) => (
-              <View key={exercise.key} h='40' bg='gray.100' my='2'>
-                {/* <Text ml='8' fontSize={'xs'} fontWeight={'semibold'}>
-                  Exercise NUMBER WILL GO HERE
-                </Text> */}
-                <HStack justifyContent='center' space={4}>
+              <View key={exercise.key} py='2' bgColor='blueGray.100' my='2'>
+                <HStack
+                  space={0}
+                  justifyContent={'space-evenly'}
+                  my='auto'
+                  maxH={'32'}
+                >
                   <Input
                     placeholder=''
                     value={exercise.name}
                     onChangeText={(value) =>
                       updateExercise(exercise.index, 'name', value)
                     }
-                    h='35'
+                    h='30'
                     w='180'
+                    my='auto'
                   />
-                  <VStack space='3'>
-                    {exercise.item.sets.length > 0
-                      ? exercise.item.sets.map((set) => (
-                          <>
-                            <HStack>
-                              <Input
-                                placeholder=''
-                                value={set.reps}
-                                onChangeText={(value) => {}}
-                                h='35'
-                                w='20'
-                              />
-                              <Input
-                                placeholder=''
-                                value={set.weight}
-                                onChangeText={(value) => {}}
-                                h='35'
-                                w='20'
-                              />
-                            </HStack>
-                          </>
-                        ))
-                      : null}
-                    <Button
-                      onPress={() => addSet(exercise.index)}
-                      w='20'
-                      mt='0'
-                      mx='auto'
-                    >
-                      <Text fontSize='2xs'>New Set</Text>
-                    </Button>
+                  <VStack my='2' space='4'>
+                    <ScrollView px='6'>
+                      {exercise.item.sets.length > 0
+                        ? exercise.item.sets.map((set) => (
+                            <>
+                              <HStack space='2'>
+                                <Input
+                                  placeholder=''
+                                  value={set.reps}
+                                  onChangeText={(value) => {}}
+                                  h='35'
+                                  w='12'
+                                />
+                                <Input
+                                  placeholder=''
+                                  value={set.weight}
+                                  onChangeText={(value) => {}}
+                                  h='35'
+                                  w='12'
+                                />
+                              </HStack>
+                            </>
+                          ))
+                        : null}
+                      <Button
+                        onPress={() => addSet(exercise.index)}
+                        w='8'
+                        rounded={'full'}
+                        pt='4'
+                        pb='2'
+                        mx='auto'
+                        bgColor={'blueGray.100'}
+                      >
+                        <AddIcon color={'green.500'} />
+                      </Button>
+                    </ScrollView>
                   </VStack>
                 </HStack>
               </View>
