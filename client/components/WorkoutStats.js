@@ -1,10 +1,11 @@
 import React from 'react'
-import { HStack, Text, VStack, View } from 'native-base'
+import { Text, View } from 'native-base'
 
 const WorkoutStats = ({ workoutData }) => {
   return (
     <View>
       <Text>Workout Stats</Text>
+      <Text></Text>
     </View>
   )
 }
