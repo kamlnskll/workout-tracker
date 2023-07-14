@@ -22,6 +22,14 @@ const WorkoutStats = ({ workoutData }) => {
     return totalReps
   }
 
+  const calculateTotalRepsAcrossExercises = async () => {
+    let totalReps = 0
+    await exerciseList.forEach((exercise) => {
+      totalReps += calculateTotalReps(exercise.sets)
+    })
+    return totalReps
+  }
+
   return (
     <View>
       <Text mx='auto' fontSize={'lg'} fontStyle={'italic'}>
@@ -37,7 +45,11 @@ const WorkoutStats = ({ workoutData }) => {
       </HStack>
       {statTab === 'total' ? (
         <View>
-          <Text>Total Exercise Stats heres</Text>
+          <Text>Total Exercise Stats</Text>
+          <Text>
+            Total reps across all exercises:{' '}
+            {calculateTotalRepsAcrossExercises().toString()}
+          </Text>
         </View>
       ) : (
         <VStack space='3' ml='4'>
@@ -49,7 +61,8 @@ const WorkoutStats = ({ workoutData }) => {
               <VStack>
                 <Text>Total reps: {calculateTotalReps(exercise.sets)}</Text>
                 <Text>
-                  Total weight moved: {calculateTotalWeightMoved(exercise.sets)}{' '}
+                  Total weight moved: {calculateTotalWeightMoved(exercise.sets)}
+                  {''}
                   pounds
                 </Text>
                 {exercise.sets.map((set) => (
@@ -64,7 +77,7 @@ const WorkoutStats = ({ workoutData }) => {
         </VStack>
       )}
 
-      <Button onPress={() => console.log(exerciseList)}>Test</Button>
+      {/* <Button onPress={() => console.log(exerciseList)}>Test</Button> */}
     </View>
   )
 }

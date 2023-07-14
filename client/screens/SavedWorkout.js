@@ -54,7 +54,7 @@ const SavedWorkout = ({ route, navigation }) => {
         borderColor='black'
         rounded='lg'
         minH={'50%'}
-        maxH={'80%'}
+        pb='4'
       >
         <HStack mx='4' my='4' justifyContent={'space-between'}>
           <Heading fontSize='md'>{date}</Heading>
@@ -62,15 +62,15 @@ const SavedWorkout = ({ route, navigation }) => {
             Created at: <Text fontWeight='semibold'>{time}</Text>
           </Text>
         </HStack>
-        <View pb='4'>
+        <View pb='8'>
           {workout?.exercises?.map((exercise) => (
-            <View>
-              <HStack ml='4'>
-                <Text>
+            <View pb='4'>
+              <HStack ml='8'>
+                <Text my='auto' fontSize='md'>
                   {exercise.name}
-                  {exercise.name !== '' ? ` - ` : null}
+                  {/* {exercise.name !== '' ? ` - ` : null} */}
                 </Text>
-                <VStack>
+                <VStack ml='4'>
                   {exercise.sets.map((set) => (
                     <>
                       <HStack>
