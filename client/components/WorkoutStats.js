@@ -22,6 +22,9 @@ const WorkoutStats = ({ workoutData }) => {
     return totalReps
   }
 
+  // Create a solution here that avoids nested loops
+  // Down the line.
+
   const calculateTotalRepsAcrossExercises = async () => {
     let totalReps = 0
     await exerciseList.forEach((exercise) => {
