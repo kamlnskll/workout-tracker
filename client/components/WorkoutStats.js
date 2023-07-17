@@ -25,12 +25,21 @@ const WorkoutStats = ({ workoutData }) => {
   // Create a solution here that avoids nested loops
   // Down the line.
 
-  const calculateTotalRepsAcrossExercises = async () => {
-    let totalReps = 0
-    await exerciseList.forEach((exercise) => {
-      totalReps += calculateTotalReps(exercise.sets)
-    })
+  const calculateTotalRepsAcrossExercises = () => {
+    const totalReps = exerciseList?.reduce((acc, exercise) => {
+      const reps = calculateTotalReps(exercise.sets)
+      return acc + reps
+    }, 0)
     return totalReps
+  }
+
+  // Output is NaN - will need to fix this likely because of the data type.
+  const calculateTotalWeightLiftedAcrossExercises = () => {
+    const totalWeight = exerciseList?.reduce((acc, exercise) => {
+      const weight = calculateTotalWeightMoved(exercise.sets)
+      return acc + weight
+    }, 0)
+    return totalWeight
   }
 
   return (
@@ -50,8 +59,12 @@ const WorkoutStats = ({ workoutData }) => {
         <View>
           <Text>Total Exercise Stats</Text>
           <Text>
-            Total reps across all exercises:{' '}
-            {calculateTotalRepsAcrossExercises().toString()}
+            Total reps this session:{' '}
+            {calculateTotalRepsAcrossExercises()}
+          </Text>
+          <Text>
+            Total weight lifted this session:{' '}
+            {calculateTotalWeightLiftedAcrossExercises()}
           </Text>
         </View>
       ) : (
