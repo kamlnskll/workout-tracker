@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Heading, Pressable } from 'native-base'
+import { View, Heading, Pressable, HStack, ScrollView, Button, Text } from 'native-base'
 import { WorkoutCard } from '../components/WorkoutCard'
 import { auth, database } from '../firebase/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
@@ -35,10 +35,13 @@ export const Home = ({ navigation }) => {
   return (
     <>
       <View>
-        <View ml='4' mt='6' mb='3'>
-          <Heading onPress={() => console.log(workouts)}>Workouts</Heading>
-        </View>
-        <View>
+        <HStack mx='8' mt='6' mb='3'>
+          <Heading>Workouts</Heading>
+          <Button ml='auto' bgColor={'green.500'} onPress={() => {}}>
+            <Text fontWeight={'bold'} color='white'>
+              Add New</Text></Button>
+        </HStack>
+        <ScrollView horizontal={true}>
           {Array.isArray(workouts)
             ? workouts.map((workout) => (
                 <Pressable
@@ -64,6 +67,9 @@ export const Home = ({ navigation }) => {
                 </Pressable>
               ))
             : null}
+        </ScrollView>
+        <View mx='8' mt='6' mb='3'>
+          <Heading>Your Stats</Heading>
         </View>
       </View>
     </>
