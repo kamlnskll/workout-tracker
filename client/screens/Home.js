@@ -70,8 +70,10 @@ export const Home = ({ navigation }) => {
         </ScrollView>
         <View mx='8' mt='6' mb='3'>
           <Heading>Your Stats</Heading>
+          <Text># of Workouts This Week/Month</Text>
         </View>
       </View>
     </>
+    // This can be represented with a simple bar chart that will compare up to 3 weeks prior.
   )
 }
