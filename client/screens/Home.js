@@ -3,10 +3,15 @@ import { View, Heading, Pressable, HStack, ScrollView, Button, Text, Select, Che
 import { WorkoutCard } from '../components/WorkoutCard'
 import { auth, database } from '../firebase/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
+import { Dimensions } from "react-native";
+
+
+import { BarChart } from 'react-native-chart-kit'
 
 export const Home = ({ navigation }) => {
   const [workouts, setWorkouts] = useState()
   const [dateRange, setDateRange] = useState('7d')
+  const screenWidth = Dimensions.get("window").width
   const currentUserID = auth.currentUser.uid
 
   const getWorkoutsFromDB = async () => {
@@ -22,6 +27,19 @@ export const Home = ({ navigation }) => {
     return fetchWorkouts
   }
 
+  const chartConfig = {
+    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFromOpacity: 0.2,
+    backgroundGradientTo: "#08130D",
+    backgroundGradientToOpacity: 0.8,
+    decimalPlaces: 0,
+    color: (opacity = 1) => `rgba(255, 255, 100, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.8,
+  
+  }
+
+
   useEffect(() => {
     getWorkoutsFromDB()
       .then((res) => {
@@ -35,7 +53,7 @@ export const Home = ({ navigation }) => {
 
   return (
     <>
-      <View>
+      <ScrollView mx='auto'>
         <HStack mx='8' mt='6' mb='3'>
           <Heading>Workouts</Heading>
           <Button ml='auto' bgColor={'green.500'} onPress={() => {}}>
@@ -60,7 +78,6 @@ export const Home = ({ navigation }) => {
                   }}
                   rounded='lg'
                   w='75%'
-                  ml='4'
                   mr='auto'
                   justifyContent='left'
                 >
@@ -69,7 +86,7 @@ export const Home = ({ navigation }) => {
               ))
             : null}
         </ScrollView>
-        <View  mx='8' mt='6' mb='3'>
+        <View mt='6' mb='3'>
         <HStack>
           <Heading my='auto'>Your Stats</Heading>
           <Select defaultValue={dateRange} selectedValue={dateRange} ml='auto' maxHeight='32px' minWidth="120" accessibilityLabel="Range" placeholder="Date Range" _selectedItem={{
@@ -86,10 +103,32 @@ export const Home = ({ navigation }) => {
           */}
         </Select>
         </HStack>
-        <Text># of Workouts This Week/Month</Text>
-
-        </View>
+        <View>
+        <BarChart
+        data={{
+          labels: ["7d", "-14d", "-21d", "-28d"],
+          datasets: [
+            {
+              data: [3, 4, 6, 7]
+            }
+          ]
+        }
+        }
+        width={screenWidth}
+        height={240}
+        chartConfig={chartConfig}
+        fromZero={true}
+        withInnerLines={false}
+        showBarTops={false}
+        showValuesOnTopOfBars={true}
+        style={{borderRadius: 16,
+          marginVertical: 12,
+        }}
+        />
+      
       </View>
+        </View>
+      </ScrollView>
     </>
     // This can be represented with a simple bar chart that will compare up to 3 weeks prior.
   )
