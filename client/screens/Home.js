@@ -4,9 +4,10 @@ import { WorkoutCard } from '../components/WorkoutCard'
 import { auth, database } from '../firebase/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 import { Dimensions } from "react-native";
-
-
 import { BarChart } from 'react-native-chart-kit'
+import dayjs from 'dayjs'
+
+
 
 export const Home = ({ navigation }) => {
   const [workouts, setWorkouts] = useState()
@@ -35,7 +36,7 @@ export const Home = ({ navigation }) => {
     decimalPlaces: 0,
     color: (opacity = 1) => `rgba(255, 255, 100, ${opacity})`,
     strokeWidth: 2, // optional, default 3
-    barPercentage: 0.8,
+    barPercentage: 1,
   
   }
 
@@ -87,7 +88,7 @@ export const Home = ({ navigation }) => {
             : null}
         </ScrollView>
         <View mt='6' mb='3'>
-        <HStack>
+        <HStack mx='6'>
           <Heading my='auto'>Your Stats</Heading>
           <Select defaultValue={dateRange} selectedValue={dateRange} ml='auto' maxHeight='32px' minWidth="120" accessibilityLabel="Range" placeholder="Date Range" _selectedItem={{
         bg: "tertiary.200",
@@ -109,7 +110,7 @@ export const Home = ({ navigation }) => {
           labels: ["7d", "-14d", "-21d", "-28d"],
           datasets: [
             {
-              data: [3, 4, 6, 7]
+              data: [1, 4, 6, 7]
             }
           ]
         }
@@ -130,6 +131,5 @@ export const Home = ({ navigation }) => {
         </View>
       </ScrollView>
     </>
-    // This can be represented with a simple bar chart that will compare up to 3 weeks prior.
   )
 }
