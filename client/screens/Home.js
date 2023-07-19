@@ -54,7 +54,6 @@ export const Home = ({ navigation }) => {
     
   };
 
-
   useEffect(() => {
     getWorkoutsFromDB()
       .then((res) => {
@@ -64,23 +63,12 @@ export const Home = ({ navigation }) => {
        
         }
       }).then(() => {
-        console.log('Second then in chain console log')
         workouts.forEach((workout) => {
-          return console.log('Workout timestamp', workout.timestamp.seconds)
+          console.log(dayjs(workout.timestamp.seconds * 1000))
         })
       })
       .catch((err) => console.log(err))
   }, [])
-
-  useEffect(() => {
-    if (workouts && workouts.length > 0) {
-      console.log('workout 0 timestamp.seconds', workouts[0]?.timestamp)
-      console.log('workouts', workouts)
-      console.log('dateRange', dateRange)
-      // const filtered = getFilteredWorkouts(workouts, dateRange);
-      // setFilteredWorkouts(filtered);
-    }
-  }, [dateRange, workouts])
 
   return (
     <>
