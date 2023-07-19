@@ -10,8 +10,9 @@ import dayjs from 'dayjs'
 
 
 export const Home = ({ navigation }) => {
-  const [workouts, setWorkouts] = useState()
-  const [dateRange, setDateRange] = useState('7d')
+  const [workouts, setWorkouts] = useState([])
+  const [filteredWorkouts, setFilteredWorkouts] = useState([])
+  const [dateRange, setDateRange] = useState(7)
   const screenWidth = Dimensions.get("window").width
   const currentUserID = auth.currentUser.uid
 
@@ -40,6 +41,19 @@ export const Home = ({ navigation }) => {
   
   }
 
+  const getFilteredWorkouts = (workoutArray, date) => {
+    const endDate = dayjs();
+    const startDate = endDate.subtract(date - 1, 'day');
+  
+    if(workoutArray){
+      return workoutArray?.filter((workout) => {
+        const workoutDate = dayjs(workout?.timestamp?.seconds)
+        return workoutDate.isBetween(startDate, endDate, '[]');
+      });
+    }
+    
+  };
+
 
   useEffect(() => {
     getWorkoutsFromDB()
@@ -47,10 +61,26 @@ export const Home = ({ navigation }) => {
         const response = res
         if (response) {
           setWorkouts(response)
+       
         }
+      }).then(() => {
+        console.log('Second then in chain console log')
+        workouts.forEach((workout) => {
+          return console.log('Workout timestamp', workout.timestamp.seconds)
+        })
       })
       .catch((err) => console.log(err))
   }, [])
+
+  useEffect(() => {
+    if (workouts && workouts.length > 0) {
+      console.log('workout 0 timestamp.seconds', workouts[0]?.timestamp)
+      console.log('workouts', workouts)
+      console.log('dateRange', dateRange)
+      // const filtered = getFilteredWorkouts(workouts, dateRange);
+      // setFilteredWorkouts(filtered);
+    }
+  }, [dateRange, workouts])
 
   return (
     <>
@@ -93,10 +123,14 @@ export const Home = ({ navigation }) => {
           <Select defaultValue={dateRange} selectedValue={dateRange} ml='auto' maxHeight='32px' minWidth="120" accessibilityLabel="Range" placeholder="Date Range" _selectedItem={{
         bg: "tertiary.200",
         endIcon: <CheckIcon size="5" />
-      }} mt={1} onValueChange={(value) => {setDateRange(value)}}>
-          <Select.Item label="7 Days" value="7d" />
-          <Select.Item label="14 Days" value="14d" />
-          <Select.Item label="30 Days" value="30d" />
+      }} mt={1} onValueChange={(value) => {
+        setDateRange(value)
+        console.log(filteredWorkouts)
+
+        }}>
+          <Select.Item label="7 Days" value={7} />
+          <Select.Item label="14 Days" value={14} />
+          <Select.Item label="30 Days" value={30} />
           {/* <Select.Item label="Last 90 Days" value="90d" />
           <Select.Item label="Last 6 months" value="180d" />
           <Select.Item label="Last 1 year" value="365d" /> 
@@ -107,7 +141,12 @@ export const Home = ({ navigation }) => {
         <View>
         <BarChart
         data={{
-          labels: ["7d", "-14d", "-21d", "-28d"],
+          labels: [...Array(4)].map((_, index) => {
+            const rangeIndex = 3 - index;
+            const endDate = dayjs().subtract(rangeIndex * dateRange, 'day');
+            const startDate = endDate.subtract(dateRange - 1, 'day');
+            return `${startDate.format('MMMM D')}-${endDate.format('D')}`;
+          }),
           datasets: [
             {
               data: [1, 4, 6, 7]
@@ -120,6 +159,7 @@ export const Home = ({ navigation }) => {
         chartConfig={chartConfig}
         fromZero={true}
         withInnerLines={false}
+        yAxisInterval={1}
         showBarTops={false}
         showValuesOnTopOfBars={true}
         style={{borderRadius: 16,
