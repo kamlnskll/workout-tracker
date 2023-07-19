@@ -70,7 +70,7 @@ const WorkoutStats = ({ workoutData }) => {
       ) : (
         <VStack space='3' ml='4'>
           {exerciseList?.map((exercise) => (
-            <View>
+            <View key={exercise.key}>
               <Text fontSize='sm' fontWeight={'semibold'}>
                 {exercise.name}
               </Text>
@@ -93,8 +93,7 @@ const WorkoutStats = ({ workoutData }) => {
         </VStack>
       )}
 
-      {/* <Button onPress={() => console.log(exerciseList)}>Test</Button> */}
-    </View>
+s    </View>
   )
 }
 

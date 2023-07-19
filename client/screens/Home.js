@@ -6,6 +6,10 @@ import { collection, query, where, getDocs } from 'firebase/firestore'
 import { Dimensions } from "react-native";
 import { BarChart } from 'react-native-chart-kit'
 import dayjs from 'dayjs'
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
+
+
 
 
 
@@ -41,18 +45,19 @@ export const Home = ({ navigation }) => {
   
   }
 
-  const getFilteredWorkouts = (workoutArray, date) => {
+  const getFilteredWorkouts = (workoutArray, range) => {
     const endDate = dayjs();
-    const startDate = endDate.subtract(date - 1, 'day');
+    const startDate = endDate.subtract(range - 1, 'day');
   
-    if(workoutArray){
-      return workoutArray?.filter((workout) => {
-        const workoutDate = dayjs(workout?.timestamp?.seconds)
-        return workoutDate.isBetween(startDate, endDate, '[]');
-      });
-    }
-    
+    const filteredWorkouts = workoutArray.filter((workout) => {
+      const targetDate = workout?.timestamp?.seconds * 1000;
+      const isBetweenDate = dayjs(targetDate).isBetween(startDate, endDate);
+      return isBetweenDate;
+    });
+  
+    return filteredWorkouts;
   };
+
 
   useEffect(() => {
     getWorkoutsFromDB()
@@ -63,12 +68,18 @@ export const Home = ({ navigation }) => {
        
         }
       }).then(() => {
-        workouts.forEach((workout) => {
-          console.log(dayjs(workout.timestamp.seconds * 1000))
-        })
+        const filtered = getFilteredWorkouts(workouts, dateRange);
+        setFilteredWorkouts(filtered);
+        console.log(filteredWorkouts);
       })
       .catch((err) => console.log(err))
   }, [])
+
+  useEffect(() => {
+    const filtered = getFilteredWorkouts(workouts, dateRange);
+    setFilteredWorkouts(filtered);
+  }, [dateRange]);
+
 
   return (
     <>
@@ -80,9 +91,10 @@ export const Home = ({ navigation }) => {
               Add New</Text></Button>
         </HStack>
         <ScrollView horizontal={true}>
-          {Array.isArray(workouts)
-            ? workouts.map((workout) => (
+          {Array.isArray(filteredWorkouts)
+            ? filteredWorkouts.map((workout) => (
                 <Pressable
+                key={workout.id}
                   my='1'
                   bg='primary.50'
                   borderColor={'black'}
@@ -113,17 +125,12 @@ export const Home = ({ navigation }) => {
         endIcon: <CheckIcon size="5" />
       }} mt={1} onValueChange={(value) => {
         setDateRange(value)
-        console.log(filteredWorkouts)
 
         }}>
           <Select.Item label="7 Days" value={7} />
           <Select.Item label="14 Days" value={14} />
           <Select.Item label="30 Days" value={30} />
-          {/* <Select.Item label="Last 90 Days" value="90d" />
-          <Select.Item label="Last 6 months" value="180d" />
-          <Select.Item label="Last 1 year" value="365d" /> 
-          Implement these date ranges later on.
-          */}
+       
         </Select>
         </HStack>
         <View>
@@ -133,7 +140,7 @@ export const Home = ({ navigation }) => {
             const rangeIndex = 3 - index;
             const endDate = dayjs().subtract(rangeIndex * dateRange, 'day');
             const startDate = endDate.subtract(dateRange - 1, 'day');
-            return `${startDate.format('MMMM D')}-${endDate.format('D')}`;
+            return `${startDate.format('MMMM D')}-${endDate.format('MMM D')}`;
           }),
           datasets: [
             {
@@ -161,3 +168,15 @@ export const Home = ({ navigation }) => {
     </>
   )
 }
+
+// workouts.forEach((workout) => {
+          // This block of code works for checking inBetween dates.
+          // If workout creation date falls within range, it is true.
+        //   const endDate = dayjs();
+        //   const startDate = endDate.subtract(dateRange - 1, 'day');
+        //   const targetDate = workout?.timestamp?.seconds * 1000
+        //   const isBetweenDate = dayjs(targetDate).isBetween(startDate, endDate)
+        //   console.log('isBetween', isBetweenDate)
+        // })
+
+///

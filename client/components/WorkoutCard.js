@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 
 export const WorkoutCard = ({ workout, navigation }) => {
   const exercises = workout.exercises
+  const workoutId = workout.id
   const date = dayjs
     .unix(workout.timestamp.seconds)
     .format('MMMM DD, YYYY')
@@ -14,7 +15,7 @@ export const WorkoutCard = ({ workout, navigation }) => {
   const time = dayjs.unix(workout.timestamp.seconds).format('h:mm a').toString()
 
   return (
-    <View>
+    <View key={workoutId}>
       <VStack mx='2' py='2'>
         <View>
           <HStack justifyContent={'space-between'} mb='5'>
@@ -27,16 +28,16 @@ export const WorkoutCard = ({ workout, navigation }) => {
           </HStack>
         </View>
         {exercises.map((exercise) => (
-          <HStack space={1}>
+          <HStack space={1} key={exercise.key}>
             <Text>{exercise.name}</Text>
             <Text>-</Text>
             <View>
               {exercise.sets.map((set) => (
-                <>
+                <View key={set.index}>
                   <Text>
                     {set.reps} x {set.weight}
                   </Text>
-                </>
+                </View>
               ))}
             </View>
           </HStack>
