@@ -10,9 +10,6 @@ import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
 
-
-
-
 export const Home = ({ navigation }) => {
   const [workouts, setWorkouts] = useState([])
   const [filteredWorkouts, setFilteredWorkouts] = useState([])
@@ -58,6 +55,24 @@ export const Home = ({ navigation }) => {
     return filteredWorkouts;
   };
 
+  const countWorkoutsInDateRange = (workoutArray, range) => {
+    const endDate = dayjs();
+    const startDate = endDate.subtract(range - 1, 'day');
+
+    const filteredArray = workoutArray?.filter((workout) => {
+      const targetDate = workout?.timestamp?.seconds * 1000
+      const isBetweenDate = dayjs(targetDate).isBetween(startDate, endDate)
+      const isBetweenCount = isBetweenDate.count()
+      return isBetweenCount  
+    })
+
+    return filteredArray
+   
+
+  
+  };
+
+
 
   useEffect(() => {
     getWorkoutsFromDB()
@@ -79,6 +94,7 @@ export const Home = ({ navigation }) => {
     const filtered = getFilteredWorkouts(workouts, dateRange);
     setFilteredWorkouts(filtered);
   }, [dateRange]);
+
 
 
   return (
@@ -138,7 +154,7 @@ export const Home = ({ navigation }) => {
         data={{
           labels: [...Array(4)].map((_, index) => {
             const rangeIndex = 3 - index;
-            const endDate = dayjs().subtract(rangeIndex * dateRange, 'day');
+            const endDate = dayjs().subtract((3 - rangeIndex) * dateRange, 'day');
             const startDate = endDate.subtract(dateRange - 1, 'day');
             return `${startDate.format('MMMM D')}-${endDate.format('MMM D')}`;
           }),

@@ -93,7 +93,7 @@ const WorkoutStats = ({ workoutData }) => {
         </VStack>
       )}
 
-s    </View>
+  </View>
   )
 }
 
