@@ -55,6 +55,10 @@ export const Home = ({ navigation }) => {
     return filteredWorkouts;
   };
 
+
+  
+// TO DO
+
   const countWorkoutsInDateRange = (workoutArray, range) => {
     const endDate = dayjs();
     const startDate = endDate.subtract(range - 1, 'day');
@@ -62,14 +66,12 @@ export const Home = ({ navigation }) => {
     const filteredArray = workoutArray?.filter((workout) => {
       const targetDate = workout?.timestamp?.seconds * 1000
       const isBetweenDate = dayjs(targetDate).isBetween(startDate, endDate)
-      const isBetweenCount = isBetweenDate.count()
-      return isBetweenCount  
+      return isBetweenDate  
     })
 
-    return filteredArray
+    const count = filteredArray?.length || 0;
+    return count
    
-
-  
   };
 
 
@@ -90,10 +92,16 @@ export const Home = ({ navigation }) => {
       .catch((err) => console.log(err))
   }, [])
 
+  // useEffect(() => {
+  //   const filtered = getFilteredWorkouts(workouts, dateRange);
+  //   setFilteredWorkouts(filtered);
+  //   console.log(count)
+  // }, [dateRange]);
+
   useEffect(() => {
-    const filtered = getFilteredWorkouts(workouts, dateRange);
-    setFilteredWorkouts(filtered);
-  }, [dateRange]);
+    const count = countWorkoutsInDateRange(workouts, dateRange)
+    console.log('count workouts in date', count)
+  }, [dateRange])
 
 
 
