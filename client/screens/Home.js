@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { View, Heading, Pressable } from 'native-base'
+import { View, Heading, Pressable, HStack, Button } from 'native-base'
 import { WorkoutCard } from '../components/WorkoutCard'
 import { auth, database } from '../firebase/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 
+
 export const Home = ({ navigation }) => {
+
   const [workouts, setWorkouts] = useState()
   const currentUserID = auth.currentUser.uid
+
 
   const getWorkoutsFromDB = async () => {
     // Create query for a certain condition aka for workouts created by the user and get the documents
@@ -35,9 +38,10 @@ export const Home = ({ navigation }) => {
   return (
     <>
       <View>
-        <View ml='4' mt='6' mb='3'>
+        <HStack ml='4' mt='6' mb='3' space='4'>
           <Heading onPress={() => console.log(workouts)}>Workouts</Heading>
-        </View>
+          <Button onPress={() => {navigation.navigate('New Workout')}}>New Workout</Button>
+        </HStack>
         <View>
           {Array.isArray(workouts)
             ? workouts.map((workout) => (
