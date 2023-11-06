@@ -8,25 +8,26 @@ export const WorkoutCard = ({ workout, navigation }) => {
   const exercises = workout.exercises
   const date = dayjs
     .unix(workout.timestamp.seconds)
-    .format('MMMM DD, YYYY')
+    .format('MMMM DD')
     .toString()
 
   const time = dayjs.unix(workout.timestamp.seconds).format('h:mm a').toString()
 
   return (
-    <View>
-      <VStack mx='2' py='2'>
+    <View py='4'>
+      <VStack>
         <View>
           <HStack justifyContent={'space-between'} mb='5'>
-            <Text fontSize='xs' fontWeight='bold'>
+            <Text fontSize='md' ml='4' fontWeight='bold'>
               {date}
             </Text>
-            <Text fontSize='xs' fontWeight='bold'>
+            {/* <Text fontSize='xs' fontWeight='bold'>
               {time}
-            </Text>
+            </Text> */}
           </HStack>
         </View>
-        {exercises.map((exercise) => (
+      </VStack>
+             {/* {exercises.map((exercise) => (
           <HStack space={1}>
             <Text>{exercise.name}</Text>
             <Text>-</Text>
@@ -40,8 +41,9 @@ export const WorkoutCard = ({ workout, navigation }) => {
               ))}
             </View>
           </HStack>
-        ))}
-      </VStack>
+        ))} */}
     </View>
+
+    
   )
 }
