@@ -18,19 +18,19 @@ const UserStack = () => {
           component={HomeStackNav}
           screenOptions={{ headerShown: false }}
         />
-        <Tab.Screen name='New Workout' component={WorkoutScreen} />
+        {/* <Tab.Screen name='New Workout' component={WorkoutScreen} /> */}
         <Tab.Screen name='Profile' component={ProfileStackNav} />
       </Tab.Navigator>
     </>
   )
 }
 
-const WorkoutScreen = ({ navigation }) => {
-  return (
-    <View>
-      <Workout navigation={navigation} />
-    </View>
-  )
-}
+// const WorkoutScreen = ({ navigation }) => {
+//   return (
+//     <View>
+//       <Workout navigation={navigation} />
+//     </View>
+//   )
+// }
 
 export default UserStack
