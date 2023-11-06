@@ -17,7 +17,7 @@ import * as ImagePicker from 'expo-image-picker'
 
 const Profile = ({ navigation }) => {
   const currentUser = auth.currentUser
-  const [editing, setEditing] = useState(false)
+  const [editing, setEditing] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [existingData, setExistingData] = useState(null)
   const [image, setImage] = useState(null)
@@ -298,69 +298,6 @@ const Profile = ({ navigation }) => {
             />
           </View>
         </VStack>
-      </View>
-      <View mt='12' pb='12'>
-        {!editing ? (
-          <Button mx='12' mb='4' bg='info.500' onPress={() => setEditing(true)}>
-            Edit Profile
-          </Button>
-        ) : (
-          <Button
-            mx='12'
-            mb='4'
-            bg='coolGray.400'
-            borderWidth='1'
-            isDisabled='true'
-          >
-            <Text color='black' fontWeight={'bold'}>
-              Editing
-            </Text>
-          </Button>
-        )}
-        <HStack space='5' mx='auto'>
-          {!editing ? (
-            <Button
-              w='1/3'
-              bg='blueGray.400'
-              onPress={() => navigation.navigate('Settings')}
-            >
-              Settings
-            </Button>
-          ) : (
-            <Button
-              w='1/3'
-              bg='danger.500'
-              onPress={() => {
-                setImage(null)
-                setEditing(false)
-              }}
-            >
-              Cancel Edit
-            </Button>
-          )}
-          {!editing ? (
-            <Button
-              w='1/3'
-              bg='warning.400'
-              onPress={() => {
-                signOut(auth)
-                  .then(() => {
-                    // Sign out successful
-                    console.log('signed out')
-                  })
-                  .catch((err) => {
-                    console.log('An error occurred when logging out', err)
-                  })
-              }}
-            >
-              Logout
-            </Button>
-          ) : (
-            <Button w='1/3' bg='tertiary.500' onPress={saveProfileEdits}>
-              Save Changes
-            </Button>
-          )}
-        </HStack>
       </View>
     </ScrollView>
   )

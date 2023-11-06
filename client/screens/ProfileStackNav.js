@@ -10,12 +10,13 @@ const ProfileStackNav = ({ navigation }) => {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name='Settings' component={SettingsScreen} />
+
       <Stack.Screen
         name='Profile Screen'
         component={ProfileScreen}
         screenOptions={{ headerShown: false }}
       />
-      <Stack.Screen name='Settings' component={SettingsScreen} />
     </Stack.Navigator>
   )
 }

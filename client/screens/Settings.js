@@ -1,67 +1,35 @@
 import React, { useState } from 'react'
 import {
-  View,
-  Text,
-  HStack,
-  Switch,
-  VStack,
-  Select,
-  CheckIcon,
+  View, VStack,Button,
 } from 'native-base'
-import { useColorMode } from 'native-base'
+
+import { auth } from '../firebase/firebase'
+import { signOut } from 'firebase/auth'
 
 const Settings = ({ navigation }) => {
-  const [units, setUnits] = useState('lbs')
-  const { toggleColorMode } = useColorMode()
 
   return (
-    <View
-      my='2'
-      bg='primary.50'
-      rounded='lg'
-      w='90%'
-      mx='auto'
-      p='2'
-      minH='50%'
-    >
-      <VStack space='8' mt='8' mx='12'>
-        <HStack justifyContent={'space-between'}>
-          <View my='auto'>
-            <Text fontSize={'md'} fontWeight={'semibold'}>
-              Toggle Dark Mode
-            </Text>
-          </View>
-          <View mx='auto'>
-            <Switch size='sm' onPress={toggleColorMode} />
-          </View>
-        </HStack>
-        <HStack justifyContent={'space-between'}>
-          <View my='auto'>
-            <Text fontSize={'md'} fontWeight={'semibold'}>
-              Preferred Units
-            </Text>
-          </View>
-          <View>
-            <Select
-              selectedValue={units}
-              minWidth='110'
-              accessibilityLabel='Choose Units'
-              placeholder='lbs / kg'
-              _selectedItem={{
-                bg: 'tertiary.500',
-                endIcon: <CheckIcon size='5' />,
-              }}
-              mt={1}
-              onValueChange={(itemValue) => setUnits(itemValue)}
-            >
-              <Select.Item label='Pounds' value='lbs' />
-              <Select.Item label='Kilograms' value='kg' />
-            </Select>
-          </View>
-        </HStack>
+    <View my='1/4'>
+      <VStack space='4' mx='16'>
+      <Button>Edit Labels</Button>
+      <Button>Edit Preferences</Button>
+      <Button onPress={() => {navigation.navigate('Profile Screen')}}>Edit Profile</Button>
+      <Button onPress={() => {
+                signOut(auth)
+                  .then(() => {
+                    // Sign out successful
+                    console.log('signed out')
+                  })
+                  .catch((err) => {
+                    console.log('An error occurred when logging out', err)
+                  })
+              }}>Log Out</Button>
       </VStack>
+
+
     </View>
   )
+
 }
 
 export default Settings
