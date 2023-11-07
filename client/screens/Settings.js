@@ -11,7 +11,7 @@ const Settings = ({ navigation }) => {
   return (
     <View my='1/4'>
       <VStack space='4' mx='16'>
-      <Button>Edit Labels</Button>
+      <Button onPress={() => {navigation.navigate('Edit Labels')}}>Edit Labels</Button>
       <Button>Edit Preferences</Button>
       <Button onPress={() => {navigation.navigate('Profile Screen')}}>Edit Profile</Button>
       <Button onPress={() => {

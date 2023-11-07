@@ -4,6 +4,7 @@ import Profile from './Profile'
 import { createStackNavigator } from '@react-navigation/stack'
 import { View } from 'native-base'
 import Settings from './Settings'
+import EditLabels from './EditLabels'
 
 const ProfileStackNav = ({ navigation }) => {
   const Stack = createStackNavigator()
@@ -17,6 +18,13 @@ const ProfileStackNav = ({ navigation }) => {
         component={ProfileScreen}
         screenOptions={{ headerShown: false }}
       />
+
+<Stack.Screen
+        name='Edit Labels'
+        component={EditLabels}
+        screenOptions={{ headerShown: false }}
+      />
+
     </Stack.Navigator>
   )
 }
