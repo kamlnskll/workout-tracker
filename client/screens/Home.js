@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Heading, Pressable, HStack, Button } from 'native-base'
+import { View, Heading, Pressable, HStack, Button, VStack, Text, Select, CheckIcon } from 'native-base'
 import { WorkoutCard } from '../components/WorkoutCard'
 import { auth, database } from '../firebase/firebase'
 import { collection, query, where, getDocs } from 'firebase/firestore'
@@ -8,6 +8,7 @@ import { collection, query, where, getDocs } from 'firebase/firestore'
 export const Home = ({ navigation }) => {
 
   const [workouts, setWorkouts] = useState()
+  const [timeframe, setTimeframe] = useState('30')
   const currentUserID = auth.currentUser.uid
 
 
@@ -38,10 +39,25 @@ export const Home = ({ navigation }) => {
   return (
     <>
       <View>
-        <HStack ml='4' mt='6' mb='3' space='4'>
-          <Heading onPress={() => console.log(workouts)}>Workouts</Heading>
+        <VStack ml='4' >
+        <HStack mt='6' mb='3' space='4'>
+          <Heading onPress={() => console.log(workouts)}>Your Workouts</Heading>
           <Button onPress={() => {navigation.navigate('New Workout')}}>New Workout</Button>
         </HStack>
+        <Select selectedValue={timeframe} maxWidth="130" accessibilityLabel="Choose Date Range" placeholder="Last 30 days" _selectedItem={{
+        bg: "teal.600",
+        endIcon: <CheckIcon size="5" />
+      }} mt={1} onValueChange={e => setTimeframe(e)}>
+          <Select.Item label="Last 7 Days" value="7" />
+          <Select.Item label="Last 14 Days" value="14" />
+          <Select.Item label="Last 30 Days" value="30" />
+          <Select.Item label="Last 90 Days" value="90" />
+          <Select.Item label="Last 1 Year" value="365" />
+          <Select.Item label="Custom" value="custom" />
+        </Select>
+        
+ 
+        </VStack>
         <View>
           {Array.isArray(workouts)
             ? workouts.map((workout) => (
