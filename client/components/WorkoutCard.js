@@ -1,4 +1,5 @@
 import { HStack, Text, VStack, View } from 'native-base'
+import { database } from '../firebase/firebase'
 import React from 'react'
 import dayjs from 'dayjs'
 
@@ -21,27 +22,13 @@ export const WorkoutCard = ({ workout, navigation }) => {
             <Text fontSize='md' ml='4' fontWeight='bold'>
               {date}
             </Text>
-            {/* <Text fontSize='xs' fontWeight='bold'>
-              {time}
-            </Text> */}
+            <Text fontSize='lg' fontWeight='bold'>
+              {exercises.length}
+            </Text>
           </HStack>
         </View>
       </VStack>
-             {/* {exercises.map((exercise) => (
-          <HStack space={1}>
-            <Text>{exercise.name}</Text>
-            <Text>-</Text>
-            <View>
-              {exercise.sets.map((set) => (
-                <>
-                  <Text>
-                    {set.reps} x {set.weight}
-                  </Text>
-                </>
-              ))}
-            </View>
-          </HStack>
-        ))} */}
+            
     </View>
 
     
