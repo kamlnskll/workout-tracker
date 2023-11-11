@@ -56,6 +56,7 @@ const SavedWorkout = ({ route, navigation }) => {
         minH={'50%'}
         pb='4'
       >
+        <Text>Add Label</Text>
         <HStack mx='4' my='4' justifyContent={'space-between'}>
           <Heading fontSize='md'>{date}</Heading>
           <Text fontSize='xs' my='auto'>
@@ -90,7 +91,6 @@ const SavedWorkout = ({ route, navigation }) => {
             </View>
           ))}
         </View>
-        <WorkoutStats workoutData={workout} />
       </View>
     </View>
   )
