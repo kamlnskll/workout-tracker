@@ -1,4 +1,5 @@
 import { HStack, Text, VStack, View } from 'native-base'
+import { database } from '../firebase/firebase'
 import React from 'react'
 import dayjs from 'dayjs'
 
@@ -8,40 +9,28 @@ export const WorkoutCard = ({ workout, navigation }) => {
   const exercises = workout.exercises
   const date = dayjs
     .unix(workout.timestamp.seconds)
-    .format('MMMM DD, YYYY')
+    .format('MMMM DD')
     .toString()
 
   const time = dayjs.unix(workout.timestamp.seconds).format('h:mm a').toString()
 
   return (
-    <View>
-      <VStack mx='2' py='2'>
+    <View py='4'>
+      <VStack>
         <View>
           <HStack justifyContent={'space-between'} mb='5'>
-            <Text fontSize='xs' fontWeight='bold'>
+            <Text fontSize='md' ml='4' fontWeight='bold'>
               {date}
             </Text>
-            <Text fontSize='xs' fontWeight='bold'>
-              {time}
+            <Text fontSize='lg' fontWeight='bold'>
+              {exercises.length}
             </Text>
           </HStack>
         </View>
-        {exercises.map((exercise) => (
-          <HStack space={1}>
-            <Text>{exercise.name}</Text>
-            <Text>-</Text>
-            <View>
-              {exercise.sets.map((set) => (
-                <>
-                  <Text>
-                    {set.reps} x {set.weight}
-                  </Text>
-                </>
-              ))}
-            </View>
-          </HStack>
-        ))}
       </VStack>
+            
     </View>
+
+    
   )
 }

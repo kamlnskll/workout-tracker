@@ -57,8 +57,8 @@ export const Register = ({ navigation }) => {
             units: 'pounds',
             height: '',
             sex: '',
-            tags: [],
-            exerciseTemplates: [],
+            labels: [{name: 'Push', color: '#0082fc'}, {name: 'Pull', color: '#a000fc'}, {name: 'Legs', color: '#fc002a'}, {name: 'Arms', color: '#fc9700'}, {name: 'Shoulders', color: '#2efc00'}, {name: 'Cardio', color: '#00fcd2'}, {name: 'Abs', color: '#fcf000'}, {name: 'Biceps', color: '#cbc8fa'}, {name: 'Triceps', color: '#ff9cc2'}, ],
+            
           }
 
           setDoc(userDocRef, userData).then((res) =>

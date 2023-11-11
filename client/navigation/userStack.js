@@ -19,7 +19,7 @@ const UserStack = () => {
           screenOptions={{ headerShown: false }}
         />
         {/* <Tab.Screen name='New Workout' component={WorkoutScreen} /> */}
-        <Tab.Screen name='Profile' component={ProfileStackNav} />
+        <Tab.Screen name='Settings' component={ProfileStackNav} />
       </Tab.Navigator>
     </>
   )

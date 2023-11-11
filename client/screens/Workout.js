@@ -26,8 +26,9 @@ import { SpinningLoader } from '../components/SpinningLoader'
 
 export const Workout = ({ workoutData, navigation }) => {
   const [setObject, setSetObject] = useState({ reps: 0, weight: 0 })
+  const [labels, setLabels] = useState([])
   const [exercises, setExercises] = useState([
-    { key: uuid.v4(), name: '', sets: [], index: 0 },
+    { key: uuid.v4(), name: '', sets: [], index: 0},
   ])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -113,6 +114,7 @@ export const Workout = ({ workoutData, navigation }) => {
       exercises,
       uploaderID: currentUserId,
       id,
+      labels: labels
     }
     // save workout to Firestore
 
