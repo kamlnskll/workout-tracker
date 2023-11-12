@@ -55,8 +55,7 @@ export const Workout = ({ workoutData, navigation }) => {
 
 useEffect(() => {getUserLabels().then((res) => {
   setUserLabels(res.labels)
-  // console.log('set user labels log', res.labels)
-  // console.log('set user labels', userLabels)
+
 }).catch((err) => console.log(err))
 
 }, [])
@@ -141,7 +140,7 @@ useEffect(() => {getUserLabels().then((res) => {
       exercises,
       uploaderID: currentUserId,
       id,
-      labels: workoutLabels
+      labels: value
     }
     // save workout to Firestore
 
@@ -191,7 +190,7 @@ useEffect(() => {getUserLabels().then((res) => {
       <SpinningLoader isVisible={loading} />
       <Flex>
         <View>
-          <Text my='4' ml='8' fontSize='xl' fontWeight='bold'>
+          <Text my='2' ml='2' fontSize='2xl' fontWeight='bold'>
             {date}
           </Text>
           <DropDownPicker
@@ -206,23 +205,25 @@ useEffect(() => {getUserLabels().then((res) => {
         }}
         schema={{
           label: 'name',
-          value: 'name',
+          value: 'id',
         }} 
         multiple={true}
         mode="BADGE"
         badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
         min={0}
         max={6}
+        placeholder='Labels'
         open={open}
         items={userLabels}
         value={value}
         setOpen={setOpen}
         setValue={setValue}
         setItems={setItems}
+        zIndex={5000}
         />
           <Text color='red.600'>{error}</Text>
         </View>
-        <View>
+        <View zIndex={1}>
           <HStack>
             <Text mx='8'>Exercise Name</Text>
             <HStack mx='auto' space='8'>
@@ -230,129 +231,7 @@ useEffect(() => {getUserLabels().then((res) => {
               <Text>Weight</Text>
             </HStack>
           </HStack>
-          <SwipeListView
-            rightOpenValue={-130}
-            previewRowKey={'0'}
-            previewOpenValue={-40}
-            previewOpenDelay={3000}
-            data={exercises}
-            renderItem={(exercise, rowMap) => (
-              <View key={exercise.key} py='2' bgColor='blueGray.100' my='2'>
-                <HStack
-                  space={0}
-                  justifyContent={'space-evenly'}
-                  my='auto'
-                  maxH={'32'}
-                >
-                  <Input
-                    placeholder=''
-                    value={exercise.name}
-                    onChangeText={(value) =>
-                      updateExercise(exercise.index, 'name', value)
-                    }
-                    h='30'
-                    w='180'
-                    my='auto'
-                  />
-                  <VStack my='2' space='4'>
-                    <ScrollView px='6'>
-                      {exercise.item.sets.length > 0
-                        ? exercise.item.sets.map((set) => (
-                            <>
-                              <HStack space='2'>
-                                <Input
-                                  placeholder=''
-                                  value={set.reps}
-                                  onChangeText={(value) => {
-                                    const updatedSets = exercise.item.sets.map(
-                                      (item) => {
-                                        if (item === set) {
-                                          return {
-                                            ...item,
-                                            reps: value,
-                                          }
-                                        }
-                                        return item
-                                      }
-                                    )
-
-                                    const updatedExercises = exercises.map(
-                                      (ex) => {
-                                        if (ex.index === exercise.index) {
-                                          return {
-                                            ...ex,
-                                            sets: updatedSets,
-                                          }
-                                        }
-                                        return ex
-                                      }
-                                    )
-
-                                    setExercises(updatedExercises)
-                                  }}
-                                  h='35'
-                                  w='12'
-                                />
-                                <Input
-                                  placeholder=''
-                                  value={set.weight}
-                                  onChangeText={(value) => {
-                                    const updatedSets = exercise.item.sets.map(
-                                      (item) => {
-                                        if (item === set) {
-                                          return {
-                                            ...item,
-                                            weight: value,
-                                          }
-                                        }
-                                        return item
-                                      }
-                                    )
-
-                                    const updatedExercises = exercises.map(
-                                      (ex) => {
-                                        if (ex.index === exercise.index) {
-                                          return {
-                                            ...ex,
-                                            sets: updatedSets,
-                                          }
-                                        }
-                                        return ex
-                                      }
-                                    )
-
-                                    setExercises(updatedExercises)
-                                  }}
-                                  h='35'
-                                  w='16'
-                                />
-                              </HStack>
-                            </>
-                          ))
-                        : null}
-                      <Button
-                        onPress={() => addSet(exercise.index)}
-                        w='8'
-                        rounded={'full'}
-                        pt='4'
-                        pb='2'
-                        mx='auto'
-                        bgColor={'blueGray.100'}
-                      >
-                        <AddIcon color={'green.500'} />
-                      </Button>
-                    </ScrollView>
-                  </VStack>
-                </HStack>
-              </View>
-            )}
-            renderHiddenItem={renderHiddenItem}
-            disableRightSwipe={true}
-          />
-
-          <Button onPress={addExercise} w='16' mt='0' mx='auto'>
-            <Text>+</Text>
-          </Button>
+        
         </View>
       </Flex>
       <Flex position='absolute' bottom='12' right='8'>
@@ -362,15 +241,4 @@ useEffect(() => {getUserLabels().then((res) => {
       </Flex>
     </View>
   )
-}
-
-{
-  /* <Button
-                      onPress={() => console.log(exercise.item.sets.length)}
-                      w='20'
-                      mt='0'
-                      mx='auto'
-                    >
-                      <Text fontSize='2xs'>TEST</Text>
-                    </Button> */
 }

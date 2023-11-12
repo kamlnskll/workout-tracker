@@ -14,6 +14,7 @@ import {
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth, database } from '../firebase/firebase'
 import { collection, doc, setDoc } from 'firebase/firestore'
+import uuid from 'react-native-uuid'
 
 export const Register = ({ navigation }) => {
   const [field, setField] = useState({
@@ -57,7 +58,7 @@ export const Register = ({ navigation }) => {
             units: 'pounds',
             height: '',
             sex: '',
-            labels: [{name: 'Push', color: '#0082fc'}, {name: 'Pull', color: '#a000fc'}, {name: 'Legs', color: '#fc002a'}, {name: 'Arms', color: '#fc9700'}, {name: 'Shoulders', color: '#2efc00'}, {name: 'Cardio', color: '#00fcd2'}, {name: 'Abs', color: '#fcf000'}, {name: 'Biceps', color: '#cbc8fa'}, {name: 'Triceps', color: '#ff9cc2'}, ],
+            labels: [{id: uuid.v4(), name: 'Push', color: '#0082fc'}, {id: uuid.v4(), name: 'Pull', color: '#a000fc'}, {id: uuid.v4(), name: 'Legs', color: '#fc002a'}, {id: uuid.v4(), name: 'Arms', color: '#fc9700'}, {id: uuid.v4(), name: 'Shoulders', color: '#2efc00'}, {id: uuid.v4(), name: 'Cardio', color: '#00fcd2'}, {id: uuid.v4(), name: 'Abs', color: '#fcf000'}, {id: uuid.v4(), name: 'Biceps', color: '#cbc8fa'}, {id: uuid.v4(), name: 'Triceps', color: '#ff9cc2'}, ],
             
           }
 
