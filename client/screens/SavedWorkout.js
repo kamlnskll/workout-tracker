@@ -1,13 +1,26 @@
 import { HStack, Heading, Text, View, VStack } from 'native-base'
 import React, { useEffect, useState } from 'react'
-import { getDocs, collection, query, where } from 'firebase/firestore'
-import { database } from '../firebase/firebase'
+import { getDocs, getDoc, collection, query, where, doc } from 'firebase/firestore'
+import { database, auth } from '../firebase/firebase'
 import dayjs from 'dayjs'
-import WorkoutStats from '../components/WorkoutStats'
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const SavedWorkout = ({ route, navigation }) => {
   const [workout, setWorkout] = useState()
+  const [userLabels, setUserLabels] = useState([])
+  const [workoutLabels, setWorkoutLabels] = useState([])
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState([])
+  const [items, setItems] = useState([])
   const { id } = route.params
+  const currentUserID = auth.currentUser.uid
+
+
+  ///
+  ///
+  ///
+  ///
+  ///
 
   const fetchWorkoutById = async () => {
     const workoutQuery = query(
@@ -19,7 +32,7 @@ const SavedWorkout = ({ route, navigation }) => {
     const workoutData = fetchWorkout.docs.map((doc) => doc.data())
 
     if (fetchWorkout) {
-      console.log('document data:', workoutData)
+      // console.log('document data:', workoutData)
     } else {
       console.log('Workout not found')
     }
@@ -27,11 +40,47 @@ const SavedWorkout = ({ route, navigation }) => {
     return workoutData[0]
   }
 
+  ///
+  ///
+  ///
+  ///
+  ///
+
+  const getUserLabels = async () => {
+    // Find user document in the database and fetch their labels.
+        const userDoc = doc(database, "users", currentUserID)
+        const docSnapshot = await getDoc(userDoc)
+        if (docSnapshot.exists()){
+          const data = docSnapshot.data()
+          return data
+        } else {
+          console.log('No document found')
+        }
+      }
+
+///
+///
+///
+///
+///
+
+
   useEffect(() => {
     // get workout details given id as prop from firestore and display it on a separate page.
+    
     fetchWorkoutById().then((res) => {
       setWorkout(res)
-    })
+    }).catch(err => console.log(err))
+
+    // also fetch labels in case you decide to edit them
+
+    getUserLabels().then((res) => {
+      setUserLabels(res.labels)
+      // console.log('set user labels log', res.labels)
+      // console.log('set user labels', userLabels)
+    }).catch((err) => console.log(err))
+
+
   }, [])
 
   const date = dayjs
@@ -57,6 +106,7 @@ const SavedWorkout = ({ route, navigation }) => {
         pb='4'
       >
         <Text>Add Label</Text>
+
         <HStack mx='4' my='4' justifyContent={'space-between'}>
           <Heading fontSize='md'>{date}</Heading>
           <Text fontSize='xs' my='auto'>
@@ -64,6 +114,17 @@ const SavedWorkout = ({ route, navigation }) => {
           </Text>
         </HStack>
         <View pb='8'>
+        <DropDownPicker 
+        multiple={true}
+        min={0}
+        max={6}
+        open={open}
+        items={items}
+        value={value}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        />
           {workout?.exercises?.map((exercise) => (
             <View pb='4'>
               <HStack ml='8'>
