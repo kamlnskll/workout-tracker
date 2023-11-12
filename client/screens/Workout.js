@@ -12,11 +12,12 @@ import {
   ScrollView,
 } from 'native-base'
 import dayjs from 'dayjs'
-import { collection, addDoc } from 'firebase/firestore'
+import { getDocs, getDoc, addDoc, collection, query, where, doc } from 'firebase/firestore'
 import { database, auth } from '../firebase/firebase'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import uuid from 'react-native-uuid'
 import { serverTimestamp } from 'firebase/firestore'
+import DropDownPicker from 'react-native-dropdown-picker';
 import { SpinningLoader } from '../components/SpinningLoader'
 
 // Need to change it so that I can add reps to individual sets
@@ -25,8 +26,13 @@ import { SpinningLoader } from '../components/SpinningLoader'
 // with custom
 
 export const Workout = ({ workoutData, navigation }) => {
+  const currentUserID = auth.currentUser.uid
   const [setObject, setSetObject] = useState({ reps: 0, weight: 0 })
-  const [labels, setLabels] = useState([])
+  const [workoutLabels, setWorkoutLabels] = useState([])
+  const [userLabels, setUserLabels] = useState([])
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState([])
+  const [items, setItems] = useState([])
   const [exercises, setExercises] = useState([
     { key: uuid.v4(), name: '', sets: [], index: 0},
   ])
@@ -34,6 +40,26 @@ export const Workout = ({ workoutData, navigation }) => {
   const [loading, setLoading] = useState(false)
   const currentUserId = auth.currentUser.uid
   const date = dayjs().format('MMMM DD')
+
+  const getUserLabels = async () => {
+    // Find user document in the database and fetch their labels.
+        const userDoc = doc(database, "users", currentUserID)
+        const docSnapshot = await getDoc(userDoc)
+        if (docSnapshot.exists()){
+          const data = docSnapshot.data()
+          return data
+        } else {
+          console.log('No document found')
+        }
+      }
+
+useEffect(() => {getUserLabels().then((res) => {
+  setUserLabels(res.labels)
+  // console.log('set user labels log', res.labels)
+  // console.log('set user labels', userLabels)
+}).catch((err) => console.log(err))
+
+}, [])
 
   useEffect(() => {
     setTimeout(() => {
@@ -53,6 +79,7 @@ export const Workout = ({ workoutData, navigation }) => {
       },
     ])
   }
+
 
   const addSet = (exerciseIndex) => {
     const fetchExercise = exercises.map((exercise) => {
@@ -114,7 +141,7 @@ export const Workout = ({ workoutData, navigation }) => {
       exercises,
       uploaderID: currentUserId,
       id,
-      labels: labels
+      labels: workoutLabels
     }
     // save workout to Firestore
 
@@ -167,7 +194,32 @@ export const Workout = ({ workoutData, navigation }) => {
           <Text my='4' ml='8' fontSize='xl' fontWeight='bold'>
             {date}
           </Text>
-
+          <DropDownPicker
+        style={{
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+       
+        borderColor: 'rgba(255, 255, 255, 0)'
+        }}
+        dropDownContainerStyle={{
+          backgroundColor: "rgba(255, 255, 255, 100)",
+          borderColor: 'rgba(255, 255, 255, 0)'
+        }}
+        schema={{
+          label: 'name',
+          value: 'name',
+        }} 
+        multiple={true}
+        mode="BADGE"
+        badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
+        min={0}
+        max={6}
+        open={open}
+        items={userLabels}
+        value={value}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        />
           <Text color='red.600'>{error}</Text>
         </View>
         <View>

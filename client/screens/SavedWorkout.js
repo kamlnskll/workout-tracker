@@ -33,7 +33,6 @@ const SavedWorkout = ({ route, navigation }) => {
     const workoutData = fetchWorkout.docs.map((doc) => doc.data())
 
     if (fetchWorkout) {
-      // console.log('document data:', workoutData)
     } else {
       console.log('Workout not found')
     }
