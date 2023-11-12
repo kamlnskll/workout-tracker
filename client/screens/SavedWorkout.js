@@ -9,6 +9,7 @@ const SavedWorkout = ({ route, navigation }) => {
   const [workout, setWorkout] = useState()
   const [userLabels, setUserLabels] = useState([])
   const [workoutLabels, setWorkoutLabels] = useState([])
+  const [editing, setEditing] = useState(editing)
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState([])
   const [items, setItems] = useState([])
@@ -105,7 +106,6 @@ const SavedWorkout = ({ route, navigation }) => {
         minH={'50%'}
         pb='4'
       >
-        <Text>Add Label</Text>
 
         <HStack mx='4' my='4' justifyContent={'space-between'}>
           <Heading fontSize='md'>{date}</Heading>
@@ -114,12 +114,28 @@ const SavedWorkout = ({ route, navigation }) => {
           </Text>
         </HStack>
         <View pb='8'>
-        <DropDownPicker 
+        <DropDownPicker
+        style={{
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+       
+        borderColor: 'rgba(255, 255, 255, 0)'
+        }}
+        dropDownContainerStyle={{
+          backgroundColor: "rgba(255, 255, 255, 100)",
+          borderColor: 'rgba(255, 255, 255, 0)'
+        }}
+        schema={{
+          label: 'name',
+          value: 'name',
+        }} 
         multiple={true}
+        mode="BADGE"
+        badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
         min={0}
         max={6}
+        disabled={editing}
         open={open}
-        items={items}
+        items={userLabels}
         value={value}
         setOpen={setOpen}
         setValue={setValue}
